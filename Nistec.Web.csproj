@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8C4CFF01-180E-41A1-9234-0C1B1E207AE5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nistec.Web</RootNamespace>
+    <AssemblyName>Nistec.Web</AssemblyName>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>MControl.pfx</AssemblyOriginatorKeyFile>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\References\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\References\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>..\..\References\Release\Nistec.Web.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Asp\DevicePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Cms\CmsCache.cs" />
+    <Compile Include="Cms\CmsSite.cs" />
+    <Compile Include="Cms\CmsPage.cs" />
+    <Compile Include="Cms\CmsSiteTree.cs" />
+    <Compile Include="Cms\CmsPageEdit.cs" />
+    <Compile Include="Cms\CmsMenu.cs" />
+    <Compile Include="Cms\CmsItems.cs" />
+    <Compile Include="Cms\CmsConfig.cs" />
+    <Compile Include="Common\BrowserHelper.cs" />
+    <Compile Include="Common\CommandArgs.cs" />
+    <Compile Include="Common\CommonHelper.cs" />
+    <Compile Include="Asp\ExportUtil.cs" />
+    <Compile Include="Common\DateHelper.cs" />
+    <Compile Include="Common\GenericComparer.cs" />
+    <Compile Include="Asp\GridHelper.cs" />
+    <Compile Include="Common\HtmlHelper.cs" />
+    <Compile Include="Common\IOhelper.cs" />
+    <Compile Include="Common\JsonHelper.cs" />
+    <Compile Include="Common\LinkResolver.cs" />
+    <Compile Include="Common\ListDataHelper.cs" />
+    <Compile Include="Common\NetException.cs" />
+    <Compile Include="Common\WebExtension.cs" />
+    <Compile Include="Controls\Captcha.cs" />
+    <Compile Include="Controls\EntityContextCache.cs" />
+    <Compile Include="Controls\FormResult.cs" />
+    <Compile Include="Controls\DbContextCache.cs" />
+    <Compile Include="Controls\HttpHelper.cs" />
+    <Compile Include="Controls\Lookups.cs" />
+    <Compile Include="Controls\ServerCache.cs" />
+    <Compile Include="Controls\TraceHelper.cs" />
+    <Compile Include="Controls\WebCache.cs" />
+    <Compile Include="Mvc\CsvActionResult.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Asp\Sc\Enums.cs" />
+    <Compile Include="Asp\Sc\ISessionControl.cs" />
+    <Compile Include="Asp\Sc\LoginControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asp\Sc\MasterPageView.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asp\Sc\PageExtenesion.cs" />
+    <Compile Include="Asp\Sc\ScPath.cs" />
+    <Compile Include="Asp\Sc\SecurityUtil.cs" />
+    <Compile Include="Asp\Sc\SessionContext.cs" />
+    <Compile Include="Asp\Sc\SessionControl.cs" />
+    <Compile Include="Asp\Sc\SessionException.cs" />
+    <Compile Include="Asp\Sc\Sessions.cs" />
+    <Compile Include="Asp\Sc\SessionUserControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asp\Sc\UserAuth.cs" />
+    <Compile Include="Security\AlwaysAccessibleAttribute.cs" />
+    <Compile Include="Security\Authorizer.cs" />
+    <Compile Include="Security\DeviceHelper.cs" />
+    <Compile Include="Security\SecurityException.cs" />
+    <Compile Include="Security\UserAccount.cs" />
+    <Compile Include="Security\UserResult.cs" />
+    <Compile Include="Security\UserRoles.cs" />
+    <Compile Include="Security\SignedUser.cs" />
+    <Compile Include="Security\UserMessage.cs" />
+    <Compile Include="Security\EmailProvider.cs" />
+    <Compile Include="Security\UserProfile.cs" />
+    <Compile Include="Security\UserMembership.cs" />
+    <Compile Include="Security\Enums.cs" />
+    <Compile Include="Security\LocalizedString.cs" />
+    <Compile Include="Security\Notifier.cs" />
+    <Compile Include="Security\UserContext.cs" />
+    <Compile Include="Security\Permission.cs" />
+    <Compile Include="Security\UserParams.cs" />
+    <Compile Include="Security\MembershipSettings.cs" />
+    <Compile Include="Security\FormsAuth.cs" />
+    <Compile Include="Security\ShellSettings.cs" />
+    <Compile Include="Security\HttpContextAccess.cs" />
+    <Compile Include="Security\Interfaces.cs" />
+    <Compile Include="Asp\RedirectResult.cs" />
+    <Compile Include="Common\HttpRequestExtensions.cs" />
+    <Compile Include="Asp\PageExtension.cs" />
+    <Compile Include="Asp\ActionResult.cs" />
+    <Compile Include="Asp\Winbox.cs" />
+    <Compile Include="Asp\Culture\CookieItem.cs" />
+    <Compile Include="Asp\Culture\CultureConfig.cs" />
+    <Compile Include="Asp\Culture\CultureControl.cs" />
+    <Compile Include="Asp\Culture\CulturePage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Asp\Culture\CultureUtils.cs" />
+    <Compile Include="Asp\Culture\PostBackEventArgs.cs" />
+    <Compile Include="Asp\Culture\StringUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="MControl.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nistec.Channels\Nistec.Channels\Nistec.Channels.csproj">
+      <Project>{0839a364-a34d-4143-ad4c-aef4c7b232ac}</Project>
+      <Name>Nistec.Channels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nistec.Data\Nistec.Data\Nistec.Data.csproj">
+      <Project>{d5fd6c68-86ea-48bf-8f6d-29ce57419500}</Project>
+      <Name>Nistec.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nistec.Lib\Nistec.Lib.csproj">
+      <Project>{54f52ed5-aecd-47c6-93d8-7b3358ba7f8c}</Project>
+      <Name>Nistec.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nistec.Logger\Nistec.Logger.csproj">
+      <Project>{e510dd2c-859c-476c-9901-60edfc5e71f1}</Project>
+      <Name>Nistec.Logger</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>
