@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Nistec.Web.Security
 {
-        public enum PermsView
+    public enum PermsView
     {
         None = 0,//    לא מורשה
         Read = 1,//    קריאה בלבד
