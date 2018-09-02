@@ -67,10 +67,18 @@ namespace Nistec.Web.Controls
         {
             return Task.Factory.StartNew(() => Log(folder, Action, LogText, clientIp, referrer, LogType));
         }
-        public static int Log(string folder, string Action, string LogText, string clientIp,string referrer, int LogType = 0)
+        public static int Log(string folder, string Action, string LogText, string clientIp, string referrer, int LogType = 0)
         {
-            using (var db = DbContext.Create<Dbc>())
-                return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            try
+            {
+                using (var db = DbContext.Create<Dbc>())
+                    return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message;
+                return -1;
+            }
         }
 
         //public async static Task<int> LogAsync(string folder, string Action, string LogText, HttpRequestBase request, int LogType = 0)
@@ -84,30 +92,45 @@ namespace Nistec.Web.Controls
 
         public static int Log(string folder, string Action, string LogText, HttpRequestBase request, int LogType = 0)
         {
-
-            string referrer = HttpHelper.GetReferrer(request);
-            string clientIp = HttpHelper.GetClientIP(request);// request == null ? "" : request.UserHostAddress;
-            //if (request != null)
-            //{
-            //    clientIp = request.UserHostAddress;
-            //    if (request.UrlReferrer != null)
-            //        referrer = request.UrlReferrer.AbsoluteUri;
-            //}
-            using (var db = DbContext.Create<Dbc>())
-            return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            try
+            {
+                string referrer = HttpHelper.GetReferrer(request);
+                string clientIp = HttpHelper.GetClientIP(request);// request == null ? "" : request.UserHostAddress;
+                                                                  //if (request != null)
+                                                                  //{
+                                                                  //    clientIp = request.UserHostAddress;
+                                                                  //    if (request.UrlReferrer != null)
+                                                                  //        referrer = request.UrlReferrer.AbsoluteUri;
+                                                                  //}
+                using (var db = DbContext.Create<Dbc>())
+                    return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            }
+            catch(Exception ex)
+            {
+                string err = ex.Message;
+                return -1;
+            }
         }
         public static int Log(string folder, string Action, string LogText, HttpRequest request, int LogType = 0)
         {
-            string referrer = HttpHelper.GetReferrer(request);
-            string clientIp = HttpHelper.GetClientIP(request);//request == null ? "" : request.UserHostAddress;
-            //if (request != null)
-            //{
-            //    clientIp = request.UserHostAddress;
-            //    if (request.UrlReferrer != null)
-            //        referrer = request.UrlReferrer.AbsoluteUri;
-            //}
-            using (var db = DbContext.Create<Dbc>())
-            return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            try
+            {
+                string referrer = HttpHelper.GetReferrer(request);
+                string clientIp = HttpHelper.GetClientIP(request);//request == null ? "" : request.UserHostAddress;
+                                                                  //if (request != null)
+                                                                  //{
+                                                                  //    clientIp = request.UserHostAddress;
+                                                                  //    if (request.UrlReferrer != null)
+                                                                  //        referrer = request.UrlReferrer.AbsoluteUri;
+                                                                  //}
+                using (var db = DbContext.Create<Dbc>())
+                    return db.ExecuteNonQuery("sp_Log", "Folder", folder, "Action", Action, "LogText", LogText, "Client", clientIp, "Referrer", referrer, "LogType", LogType);
+            }
+            catch (Exception ex)
+            {
+                string err = ex.Message;
+                return -1;
+            }
         }
 
         //public static int GetAccountId()
