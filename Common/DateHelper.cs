@@ -20,7 +20,12 @@ namespace Nistec.Web
     {
         public static DateTime MinDate { get { return new DateTime(1900, 1, 1); } }
 
-    
+        public static DateTime? DateTimeTryParse(string text)
+        {
+            DateTime date;
+            return DateTime.TryParse(text, out date) ? date : (DateTime?)null;
+        }
+
         #region Date time function
 
         public static string FormtDate(string date)
@@ -50,6 +55,12 @@ namespace Nistec.Web
         {
             DateTime res = DateTime.Now;
             return DateTime.TryParse(date, new System.Globalization.CultureInfo(cultre, false).DateTimeFormat, System.Globalization.DateTimeStyles.None, out res);
+        }
+
+        public static DateTime? ToNullableDateTime(string date, DateTime? defaultValue=null)
+        {
+            DateTime res;
+            return DateTime.TryParse(date, DateFormat, System.Globalization.DateTimeStyles.AssumeLocal, out res) ? res : (DateTime?)defaultValue;
         }
 
         public static DateTime ToDateTime(string date)
