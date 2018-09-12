@@ -11,7 +11,8 @@
     <RootNamespace>Nistec.Web</RootNamespace>
     <AssemblyName>Nistec.Web</AssemblyName>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>MControl.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
     <SccProjectName>
     </SccProjectName>
     <SccLocalPath>
