@@ -15,7 +15,7 @@ namespace Nistec.Web.Security
         //private readonly IClock _clock;
         //private readonly IContentManager _contentManager;
         private readonly IHttpContextAccess _httpContextAccess;
-        private SignedUser _signedInUser;
+        private ISignedUser _signedInUser;
         private bool _isAuthenticated;
 
         public bool IsAuthenticated
@@ -23,7 +23,7 @@ namespace Nistec.Web.Security
             get { return _isAuthenticated; }
         }
 
-        public static SignedUser GetCurrent()
+        public static ISignedUser GetCurrent()
         {
             var form = new FormsAuth();
             return form.GetAuthenticatedUser();
@@ -138,6 +138,38 @@ namespace Nistec.Web.Security
             }
         }
 
+        public ISignedUser SignInUser<T>(string loginName, string pass, bool createPersistentCookie, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T:ISignedUser
+        {
+            try
+            {
+                var user = Authorizer.Login<T>(loginName, pass, HostClient, HostReferrer, AppName, IsMobile);
+                if (user == null)
+                {
+                    Log.Error("User not Authenticated");
+                    throw new SecurityException(AuthState.UnAuthorized, "User not Authenticated");
+                }
+                if (!user.IsAuthenticated)
+                {
+                    Log.Error("User not Authenticated");
+                    throw new SecurityException(AuthState.UnAuthorized, "User not Authenticated");
+                }
+                //user.Data = UserDataContext.GetUserDataEx(user.AccountId,user.UserId);
+                user.SetUserDataEx();
+                SignIn(user, createPersistentCookie);
+                return user;// (AuthState)user.State;//. IsAuthenticated;
+            }
+            catch (SecurityException sex)
+            {
+                throw sex;
+            }
+            catch (Exception ex)
+            {
+                Log.Exception("SignIn error ", ex);
+                //return AuthState.Failed;
+                throw new SecurityException(AuthState.Failed, "SignIn error");
+            }
+        }
+
         public bool SignIn(string loginName, string pass, bool createPersistentCookie, bool enableException)
         {
             try
@@ -218,7 +250,7 @@ namespace Nistec.Web.Security
         //    SignIn(auth, createPersistentCookie);
         //}
 
-        public void SignIn(SignedUser user, bool createPersistentCookie)
+        public void SignIn(ISignedUser user, bool createPersistentCookie)
         {
             var now = DateTime.Now;// _clock.UtcNow.ToLocalTime();
             
@@ -273,8 +305,6 @@ namespace Nistec.Web.Security
             httpContext.Session.Remove(SignedUser.SessionKey);
             _isAuthenticated = true;
             _signedInUser = user;
-
-
         }
 
         public void SignOut()
@@ -290,7 +320,7 @@ namespace Nistec.Web.Security
             FormsAuthentication.SignOut();
         }
 
-        public void SetAuthenticatedUserForRequest(SignedUser user)
+        public void SetAuthenticatedUserForRequest(ISignedUser user)
         {
             _signedInUser = user;
             _isAuthenticated = true;
@@ -314,7 +344,7 @@ namespace Nistec.Web.Security
             }
         }
 
-        public SignedUser GetAuthenticatedUser()
+        public ISignedUser GetAuthenticatedUser()
         {
             if (_signedInUser != null || _isAuthenticated)
                 return _signedInUser;

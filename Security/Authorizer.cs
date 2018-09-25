@@ -232,6 +232,45 @@ namespace Nistec.Web.Security
             return user;
         }
 
+        public static T Login<T>(string UserName, string Password, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T: ISignedUser
+        {
+
+            if (UserName == null || Password == null)
+            {
+                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,null user name or password");
+            }
+            if (!IsAlphaNumeric(Password))//(UserName, Password))
+            {
+                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
+            }
+            if (!IsValidString(UserName) || !IsValidString(Password))
+            {
+                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
+            }
+            ISignedUser user = null;
+            using (Authorizer context = new Authorizer())
+            {
+                user = context.EntityDb.QuerySingle<T>("UserName", UserName, "Password", Password, "HostClient", HostClient, "HostReferrer", HostReferrer, "AppName", AppName, "IsMobile", IsMobile);//, "AccountId", AccountId);
+            }
+
+            if (user == null)
+            {
+                throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized User");
+            }
+
+            AuthState state = (AuthState)user.State;
+            if (state != AuthState.Succeeded)
+            {
+                throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
+            }
+
+            if (user.AccountId <= 0)
+            {
+                throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized Account");
+            }
+
+            return (T)user;
+        }
 
         #endregion
 

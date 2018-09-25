@@ -13,7 +13,7 @@ namespace Nistec.Web.Security
 {
 
   
-    public class SignedUser : UserProfile, IUser
+    public class SignedUser : UserProfile, IUser, ISignedUser
     {
         internal const string SessionKey = "SignedUser";
         public static SignedUser Get(HttpContextBase context)
@@ -138,6 +138,8 @@ namespace Nistec.Web.Security
         public int EvaluationDays { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
         public bool IsMobile { get; set; }
+        [EntityProperty(EntityPropertyType.NA)]
+        public int ExType { get; set; }
 
         //[EntityProperty]
         //public int ApplicationId { get; set; }
