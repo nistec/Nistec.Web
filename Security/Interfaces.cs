@@ -137,10 +137,10 @@ namespace Nistec.Web.Security
 
     public interface IAuthentication : IDependency
     {
-        void SignIn(SignedUser user, bool createPersistentCookie);
+        void SignIn(ISignedUser user, bool createPersistentCookie);
         void SignOut();
-        void SetAuthenticatedUserForRequest(SignedUser user);
-        SignedUser GetAuthenticatedUser();
+        void SetAuthenticatedUserForRequest(ISignedUser user);
+        ISignedUser GetAuthenticatedUser();
     }
 
     

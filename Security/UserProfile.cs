@@ -182,7 +182,7 @@ namespace Nistec.Web.Security
        
     }
 
-    public class UserProfile : UserItem
+    public class UserProfile : UserItem, IUserProfile
     {
         public const string MappingName = "Ad_UserProfile";
         public const char DataSplitterCh = '-';
@@ -424,7 +424,7 @@ namespace Nistec.Web.Security
 
             //return ""+ string.Format("aid:{0},uid:{1},role:{2},lang:{3},aname:{4},category:{5},uname{6},pid:{7},data:{8}", AccountId, UserId, UserRole, Lang, AccountName, AccountCategory, DisplayName, ParentId, genericData)+""+ DataJson;
         }
-        internal static string UserDataToJson(string userData)
+        public static string UserDataToJson(string userData)
         {
             string[] data = userData.Split(DataSplitterCh);
             string genericData = "";
@@ -443,10 +443,24 @@ namespace Nistec.Web.Security
         }
         #endregion
 
+        [EntityProperty(EntityPropertyType.NA)]
+        public NameValueArgs Claims { get; set; }
+        public string ClaimsSerilaize()
+        {
+            string genericData = (Claims != null) ? Claims.ToKeyValuePipe() : null;
+            return genericData;
+        }
+        public NameValueArgs ClaimsDeserilaize(string data)
+        {
+            string[] args= data.SplitTrim('|');
+            NameValueArgs claims = new NameValueArgs(args);
+            return claims;
+        }
+
         public void SetUserDataEx()
         {
             Data = UserDataContext.GetUserDataEx(AccountId, UserId);
-        } 
+        }
 
         [EntityProperty(EntityPropertyType.NA) ]
         public NameValueArgs Data { get; set; }
@@ -475,22 +489,44 @@ namespace Nistec.Web.Security
         {
             get { return UserId > 0; }
         }
-        public bool IsLessThenManager
+
+        [EntityProperty(EntityPropertyType.NA)]
+        public PermsValue DefaultRule
         {
-            get { return UserRole < 5; }
+            get
+            {
+                if (UserRole >= 5) //UserRole.Manager
+                    return PermsValue.FullControl;
+                if (UserRole == 2)  //UserRole.Super
+                    return PermsValue.Modify;
+                //if (UserRole > 1)
+                //    return PermsValue.Add;
+                //if (UserRole >= 1)
+                //    return PermsValue.Write;
+                if (UserRole == 1) //UserRole.User
+                    return PermsValue.Read;
+
+                return PermsValue.None;
+
+            }
         }
-        public bool IsManager
-        {
-            get { return UserRole >=5; }
-        }
+
+        //public bool IsLessThenManager
+        //{
+        //    get { return UserRole < 5; }
+        //}
+        //public bool IsManager
+        //{
+        //    get { return UserRole >=5; }
+        //}
         public bool IsAdmin
         {
-            get { return UserRole ==9; }
+            get { return UserRole == 9; }
         }
-        public bool IsMaster
-        {
-            get { return UserRole >= 7; }
-        }
+        //public bool IsMaster
+        //{
+        //    get { return UserRole >= 7; }
+        //}
 
         //public bool IsManagerOrAdmin
         //{
@@ -556,5 +592,68 @@ namespace Nistec.Web.Security
                 return user;
             return null;
          }
+    }
+    //AuthState
+    public interface ISignedUser : IUserProfile,IUser
+    {
+        //[EntityProperty]
+        //int State { get; set; }
+
+        PermsValue DefaultRule { get;}
+            
+        int EvaluationDays { get; set; }
+    }
+
+    public interface IUserProfile : IEntityItem
+    {
+        #region Properties
+        [EntityProperty]
+        string DisplayName { get; set; }
+        [EntityProperty(EntityPropertyType.Identity)]
+        int UserId { get; set; }
+        //[EntityProperty]
+        //int UserRole { get; set; }
+        //[EntityProperty]
+        //string UserName { get; set; }
+        //[EntityProperty]
+        //string Email { get; set; }
+        //[EntityProperty]
+        //string Phone { get; set; }
+        //[EntityProperty]
+        //int AccountId { get; set; }
+        [EntityProperty]
+        string Lang { get; set; }
+        //[EntityProperty]
+        //int Evaluation { get; set; }
+        [EntityProperty]
+        bool IsBlocked { get; set; }
+        [EntityProperty]
+        DateTime Creation { get; set; }
+
+        [EntityProperty(EntityPropertyType.View)]
+        int AccountCategory { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        string AccountName { get; set; }
+
+        [EntityProperty]
+        int ParentId { get; set; }
+        [EntityProperty]
+        int Profession { get; set; }
+        [EntityProperty]
+        bool IsVirtual { get; set; }
+
+        #endregion
+
+        [EntityProperty(EntityPropertyType.NA)]
+        NameValueArgs Claims { get; set; }
+        [EntityProperty(EntityPropertyType.NA)]
+        NameValueArgs Data { get; set; }
+
+        void SetUserDataEx();
+
+        //string UserData();
+
+        //bool IsAuthenticated { get; }
+
     }
 }

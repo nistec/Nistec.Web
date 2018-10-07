@@ -69,17 +69,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Nistec.Channels">
-      <HintPath>..\..\References\Debug\Nistec.Channels.dll</HintPath>
+    <Reference Include="Nistec.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=734a739868a76423, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Debug\Nistec.Channels.dll</HintPath>
     </Reference>
-    <Reference Include="Nistec.Data">
-      <HintPath>..\..\References\Debug\Nistec.Data.dll</HintPath>
+    <Reference Include="Nistec.Data, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Debug\Nistec.Data.dll</HintPath>
     </Reference>
-    <Reference Include="Nistec.Lib">
-      <HintPath>..\..\References\Debug\Nistec.Lib.dll</HintPath>
+    <Reference Include="Nistec.Lib, Version=4.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Debug\Nistec.Lib.dll</HintPath>
     </Reference>
-    <Reference Include="Nistec.Logger">
-      <HintPath>..\..\References\Debug\Nistec.Logger.dll</HintPath>
+    <Reference Include="Nistec.Logger, Version=4.0.2.0, Culture=neutral, PublicKeyToken=734a739868a76423, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\References\Debug\Nistec.Logger.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -90,9 +94,7 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
-    <Reference Include="System.Web.Mvc">
-      <HintPath>..\..\References\Debug\System.Web.Mvc.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Web.Mvc, Version=4.0.0.1, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />

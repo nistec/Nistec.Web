@@ -8,15 +8,39 @@ using System.Text;
 
 namespace Nistec.Web.Security
 {
-    public enum PermsView
+    public enum PermsValue
     {
-        None = 0,//    לא מורשה
-        Read = 1,//    קריאה בלבד
-        ReadWrite = 3,//   קריאה ועריכה
-        ReadAdd = 5,// קריאה והוספה
-        Modify = 7,//  עריכה מלאה
-        FullControl = 15,//l    שליטה מלאה
+        None = 0,           // לא מורשה
+        Read = 1,           // קריאה בלבד
+        Write = 3,          // קריאה ועריכה
+        Add = 5,            // קריאה והוספה
+        Modify = 7,         // עריכה מלאה
+        FullControl = 15,   // שליטה מלאה
     }
+
+    [Flags]
+    public enum PermsLevel
+    {
+        //DenyAll = 0,
+        //ReadOnly = 1,
+        //EditOnly = 2,
+        //FullControl = 3
+
+        None = 0,   // לא מורשה
+        Read = 1,   // קריאה
+        Write = 2,  // כתיבה
+        Append = 4, // הוספה
+        Delete = 8, // מחיקה
+
+        //PermsView	0	None    לא מורשה
+        //PermsView	1	Read    קריאה בלבד
+        //PermsView	3	ReadWrite   קריאה ועריכה
+        //PermsView	5	ReadAdd קריאה והוספה
+        //PermsView	7	Modify  עריכה מלאה
+        //PermsView	15	Full Control    שליטה מלאה
+
+    }
+
 
     [Entity("UserPerms", EntityMode.Config)]
     public class PermsContext : EntityContext<PermsItem>
@@ -112,7 +136,7 @@ namespace Nistec.Web.Security
             return instance;
         }
 
-        public static PermsView LookupPerms(string LibName, int UserId, int AppId, bool EnableCache, int expirationMinutes, string item, string field="*")
+        public static PermsValue LookupPerms(string LibName, int UserId, int AppId, bool EnableCache, int expirationMinutes, string item, string field="*")
         {
             int perms=0;
             IDictionary<string, int> permsItems=null;
@@ -124,7 +148,7 @@ namespace Nistec.Web.Security
                 permsItems.TryGetValue(item + "." + field, out perms);
             }
 
-            return (PermsView)perms;
+            return (PermsValue)perms;
         }
 
         public static int Query(int UserId, string ItemName, string ItemField="*")
