@@ -62,6 +62,14 @@ namespace Nistec.Web.Security
             ExpirationTimeSpan = TimeSpan.FromDays(30);
         }
 
+        public FormsAuth (HttpContext httpContext)
+        {
+           _httpContextAccess = new HttpContextAccess(httpContext); 
+            this.Log = Logger.Instance;
+            ExpirationTimeSpan = TimeSpan.FromDays(30);
+        }
+        
+
         public FormsAuth(ShellSettings settings, IHttpContextAccess httpContextAccess)
         {
             if (settings == null)
@@ -95,19 +103,19 @@ namespace Nistec.Web.Security
 
         public static bool DoSignIn(string loginName, string pass, bool createPersistentCookie, bool enableException)
         {
-            FormsAuth form = new FormsAuth(null);
+            FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
             return form.SignIn(loginName, pass, createPersistentCookie, enableException);
         }
 
         public static AuthState DoSignIn(string loginName, string pass, bool createPersistentCookie=true)
         {
-            FormsAuth form = new FormsAuth(null);
+            FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
             return form.SignIn(loginName, pass, createPersistentCookie);
         }
 
         public static AuthState DoSignIn(string loginName, string pass, bool createPersistentCookie, string HostClient, string HostReferrer, string AppName,bool IsMobile)
         {
-            FormsAuth form = new FormsAuth(null);
+            FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
             return form.SignIn(loginName, pass, createPersistentCookie, HostClient, HostReferrer, AppName, IsMobile);
         }
 
@@ -201,7 +209,7 @@ namespace Nistec.Web.Security
 
         public static SignedUser DoSignInUser(string loginName, string pass, bool createPersistentCookie, bool isAdmin)
         {
-            FormsAuth form = new FormsAuth(null);
+            FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
             return form.SignInUser(loginName, pass,createPersistentCookie, isAdmin);
         }
 

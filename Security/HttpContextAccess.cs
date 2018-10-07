@@ -13,9 +13,18 @@ namespace Nistec.Web.Security
 
     public class HttpContextAccess : IHttpContextAccess
     {
+        HttpContext _httpContex;
+
+        public HttpContextAccess() { }
+        public HttpContextAccess(HttpContext httpContex) {
+            _httpContex = httpContex;
+        }
+
+
         public HttpContextBase Current()
         {
-            var httpContext = GetStaticProperty();
+
+            var httpContext = (_httpContex == null) ? GetStaticProperty() : _httpContex;
             if (httpContext == null)
                 return null;
             return new HttpContextWrapper(httpContext);
@@ -23,7 +32,7 @@ namespace Nistec.Web.Security
 
         private HttpContext GetStaticProperty()
         {
-            var httpContext = HttpContext.Current;
+            var httpContext =(_httpContex==null) ? HttpContext.Current: _httpContex;
             if (httpContext == null)
             {
                 return null;
