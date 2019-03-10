@@ -58,26 +58,32 @@ namespace Nistec.Web.Security
 
     public class UserRegister : UserProfile
     {
-        public UserRegister() { }
-
-        public UserRegister(string UserName, int UserRole, string Email, string Phone, int AccountId, string Lang, int Evaluation, bool IsBlocked, string DisplayName, string Password)
-        {
-            //this.UserId = UserId;
-            this.UserName = UserName;
-            this.UserRole = UserRole;
-            this.Email = Email;
-            this.Phone = Phone;
-            this.AccountId = AccountId;
-            this.Lang = Lang;
-            this.Evaluation = Evaluation;
-            this.IsBlocked = IsBlocked;
-            this.DisplayName = DisplayName;
-            this.Password = Password;
+        public UserRegister() {
             this.Creation = DateTime.Now;
         }
 
+        //public UserRegister(string UserName, int UserRole, string Email, string Phone, int AccountId, string Lang, int Evaluation, bool IsBlocked, string DisplayName, string Password)
+        //{
+        //    //this.UserId = UserId;
+        //    this.UserName = UserName;
+        //    this.UserRole = UserRole;
+        //    this.Email = Email;
+        //    this.Phone = Phone;
+        //    this.AccountId = AccountId;
+        //    this.Lang = Lang;
+        //    this.Evaluation = Evaluation;
+        //    this.IsBlocked = IsBlocked;
+        //    this.DisplayName = DisplayName;
+        //    this.Password = Password;
+        //    this.Creation = DateTime.Now;
+        //}
+
         [EntityProperty]
         public string Password { get; set; }
+        [EntityProperty]
+        public bool PasswordShouldChange { get; set; }
+        [EntityProperty]
+        public DateTime? PasswordExpirationDate { get; set; }
     }
 
     [Entity("UserData", EntityMode.Config)]

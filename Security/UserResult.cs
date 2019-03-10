@@ -49,7 +49,169 @@ namespace Nistec.Web.Security
 
     public class UserResult : IEntityItem
     {
-         public static UserResult Get(AuthState state)
+        public static UserResult Get(MembershipStatus state)
+        {
+
+            bool IsOk = false;
+            string Message = null;
+
+            switch ((MembershipStatus)state)
+            {
+                case MembershipStatus.Success:
+                    IsOk = true;
+                    Message = "התהליך הושלם בהצלחה";
+                    break;
+                case MembershipStatus.Error:
+                    Message = "אירעה שגיאה, נא לנסות שוב, אחרת נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.CouldNotResetPassword:
+                    Message = "לא ניתן לאתחל את סיסמתך במערכת, נא לנסות שוב, אחרת נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.DuplicateUserNameOrEmail:
+                    Message = "שם משתמש או כתובת דואל כבר קיימים במערכת, נא לבחור שם משתמש או כתובת דואל אחרים";
+                    break;
+                case MembershipStatus.InvalidAccountPath:
+                    Message = "נתונים שגויים, לא הוגדר נתיב לחשבון הנוכחי, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.InvalidEmailFormat:
+                    Message = "כתובת הדואל אינה תקינה";
+                    break;
+                case MembershipStatus.InvalidPasswordFormat:
+                    Message = "הסיסמה שהוקלדה אינה תואמת את כללי הסיסמאות במערכת, נא לנסות שוב עם סיסמה שונה";
+                    break;
+                case MembershipStatus.UserNameOrEmailNotExists:
+                    Message = "שם משתמש או כתובת דואל שציינת אינם מוכרים במערכת, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.UserRejected:
+                    Message = "בקשתך נדחתה, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.MembershipNotExists:
+                    Message = "לא נמצאו הגדרות הזדהות במערכת, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.UserIsBlocked:
+                    Message = "אינך מורשה לשימוש במערכת, נא לפנות למנהל המערכת";
+                    break;
+                case MembershipStatus.ResetTokenSent:
+                    IsOk = true;
+                    Message = "בשלב זה נשלח לכתובת הדואל שלך הודעה לאתחול סיסמה, נא לפעול בהתאם להוראות שנשלחו לתיבת הדאר שלך";
+                    break;
+                case MembershipStatus.InvalidUser:
+                    Message = "פרטי המשתמש שצויינו אינם מוכרים במערכת, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.InvalidTokenFormt:
+                    Message = "קוד הפנייה לאתחול סיסמה אינו תקין, נא לפנות לתמיכה";
+                    break;
+                case MembershipStatus.UserPasswordWasReset:
+                    IsOk = true;
+                    Message = "סיסמתך אותחלה בהצלחה, כעת ניתן להיכנס למערכת עם פרטי ההזדהות החדשים";
+                    break;
+                case MembershipStatus.TokenVerificationExpired:
+                    IsOk = true;
+                    Message = "פג תוקפו של קוד הפנייה לאתחול סיסמה";
+                    break;
+            }
+
+            //if (type == "membershipstatus")
+            //{
+            //    switch ((MembershipStatus)code)
+            //    {
+            //        case MembershipStatus.Success:
+            //            IsOk = true;
+            //            Message = "התהליך הושלם בהצלחה";
+            //            break;
+            //        case MembershipStatus.Error:
+            //            Message = "אירעה שגיאה, נא לנסות שוב, אחרת נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.CouldNotResetPassword:
+            //            Message = "לא ניתן לאתחל את סיסמתך במערכת, נא לנסות שוב, אחרת נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.DuplicateUserNameOrEmail:
+            //            Message = "שם משתמש או כתובת דואל כבר קיימים במערכת, נא לבחור שם משתמש או כתובת דואל אחרים";
+            //            break;
+            //        case MembershipStatus.InvalidAccountPath:
+            //            Message = "נתונים שגויים, לא הוגדר נתיב לחשבון הנוכחי, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.InvalidEmailFormat:
+            //            Message = "כתובת הדואל אינה תקינה";
+            //            break;
+            //        case MembershipStatus.InvalidPasswordFormat:
+            //            Message = "הסיסמה שהוקלדה אינה תואמת את כללי הסיסמאות במערכת, נא לנסות שוב עם סיסמה שונה";
+            //            break;
+            //        case MembershipStatus.UserNameOrEmailNotExists:
+            //            Message = "שם משתמש או כתובת דואל שציינת אינם מוכרים במערכת, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.UserRejected:
+            //            Message = "בקשתך נדחתה, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.MembershipNotExists:
+            //            Message = "לא נמצאו הגדרות הזדהות במערכת, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.UserIsBlocked:
+            //            Message = "אינך מורשה לשימוש במערכת, נא לפנות למנהל המערכת";
+            //            break;
+            //        case MembershipStatus.ResetTokenSent:
+            //            IsOk = true;
+            //            Message = "בשלב זה נשלח לכתובת הדואל שלך הודעה לאתחול סיסמה, נא לפעול בהתאם להוראות שנשלחו לתיבת הדאר שלך";
+            //            break;
+            //        case MembershipStatus.InvalidUser:
+            //            Message = "פרטי המשתמש שצויינו אינם מוכרים במערכת, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.InvalidTokenFormt:
+            //            Message = "קוד הפנייה לאתחול סיסמה אינו תקין, נא לפנות לתמיכה";
+            //            break;
+            //        case MembershipStatus.UserPasswordWasReset:
+            //            IsOk = true;
+            //            Message = "סיסמתך אותחלה בהצלחה, כעת ניתן להיכנס למערכת עם פרטי ההזדהות החדשים";
+            //            break;
+            //        case MembershipStatus.TokenVerificationExpired:
+            //            IsOk = true;
+            //            Message = "פג תוקפו של קוד הפנייה לאתחול סיסמה";
+            //            break;
+            //    }
+            //}
+            //else if (type == "authstate")
+            //{
+            //    switch ((AuthState)code)
+            //    {
+            //        case AuthState.Succeeded:
+            //            IsOk = true;
+            //            Message = "התהליך הושלם בהצלחה";
+            //            break;
+            //        case AuthState.EvaluationExpired:
+            //            Message = "זמן הנסיון במערכת הסתיים, נא לפנות לתמיכה";
+            //            break;
+            //        case AuthState.Failed:
+            //            Message = "התהליך נכשל";
+            //            break;
+            //        case AuthState.IpNotAlowed:
+            //            Message = "אין הרשאה לפעולה מהכתובת הנוכחית";
+            //            break;
+            //        case AuthState.NonConfirmed:
+            //            Message = "אין אישור לפעולה המבוקשת";
+            //            break;
+            //        case AuthState.UnAuthorized:
+            //            Message = "פרטי ההזדהות אינם מוכרים במערכת";
+            //            break;
+            //        case AuthState.UserNotRemoved:
+            //            Message = "המשתמש לא הוסר";
+            //            break;
+            //        case AuthState.UserNotUpdated:
+            //            Message = "פרטי המשתמש לא עודכנו במערכת";
+            //            break;
+            //        case AuthState.UserRemoved:
+            //            Message = "המשתמש הוסר מהמערכת";
+            //            break;
+            //        case AuthState.UserUpdated:
+            //            Message = "פרטי המשתמש עודכנו";
+            //            break;
+            //    }
+            //}
+
+            int status = IsOk ? 10 : -1;
+            return new UserResult() { Status = status, Message = Message };
+        }
+
+        public static UserResult Get(AuthState state)
         {
             string desc = "";
             switch (state)
@@ -77,7 +239,7 @@ namespace Nistec.Web.Security
                 case AuthState.Succeeded:// = 10//--10=ok
                     desc = "Ok"; break;
             }
-            return new UserResult() { Status = (int)state, Description = desc };
+            return new UserResult() { Status = (int)state, Message = desc };
         }
 
         public static UserResult IsDeleted(int result)
@@ -104,7 +266,7 @@ namespace Nistec.Web.Security
         [EntityProperty]
         public int Status { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
-        public string Description { get; set; }
+        public string Message { get; set; }
 
         [EntityProperty(EntityPropertyType.NA)]
         public bool Commit

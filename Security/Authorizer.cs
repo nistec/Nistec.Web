@@ -78,81 +78,80 @@ namespace Nistec.Web.Security
         #region Register
 
 
-        public static UserResult Register(UserRegister u)
+        public static UserResult Register(UserRegister u, bool SendResetToken = true)
         {
             try
             {
                 if (u == null || u.UserName == null || u.Password == null)
                 {
-                    throw new SecurityException( AuthState.UnAuthorized,"Authorizer_Context Register error,null UserProfile or password");
+                    throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context Register error,null UserProfile or password");
                 }
                 string Password = u.Password;
-
-                if (!Authorizer.IsAlphaNumeric(u.UserName, Password))
+                if (!Authorizer.IsValidPassword(Password))
                 {
                     throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
                 }
-                if (!Authorizer.IsValidString(u.UserName) || !Authorizer.IsValidString(Password))
+                if (!Authorizer.IsValidUserName(u.UserName))
                 {
-                    throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
+                    throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
                 }
                 SignedUser res = null;
                 using (Authorizer context = new Authorizer())
                 {
                     res = context.EntityDb.DoCommand<SignedUser>("sp_Ad_UserRegister",
-                    DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password), CommandType.StoredProcedure);
+                    DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password, "SendResetToken", SendResetToken, "PasswordShouldChange", u.PasswordShouldChange, "PasswordExpirationDate", u.PasswordExpirationDate), CommandType.StoredProcedure);
                 }
-                return new UserResult() { Status = res.State };
+                return UserResult.Get((MembershipStatus)res.State); //new UserResult() { Status = res.State };
             }
             catch (Exception ex)
             {
-                return new UserResult() { Status = -1, Description = ex.Message };
+                return new UserResult() { Status = -1, Message = ex.Message };
             }
         }
 
-        public static SignedUser Register(UserProfile u)
-        {
-            string Password = Authorizer.GenerateRandomPassword(6);
+        //public static SignedUser Register(UserProfile u)
+        //{
+        //    string Password = Authorizer.GenerateRandomPassword(6);
 
+        //    if (u == null || u.UserName == null || Password == null)
+        //    {
+        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context Register error,null UserProfile or password");
+        //    }
+        //    if (!Authorizer.IsAlphaNumeric(u.UserName, Password))
+        //    {
+        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
+        //    }
+        //    if (!Authorizer.IsValidString(u.UserName) || !Authorizer.IsValidString(Password))
+        //    {
+        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
+        //    }
+
+        //    using (Authorizer context = new Authorizer())
+        //    {
+        //        return context.EntityDb.DoCommand<SignedUser>("sp_Ad_UserRegister",
+        //        DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password), CommandType.StoredProcedure);
+        //    }
+        //}
+
+        public static int Register(UserProfile u, string Password, bool SendResetToken=true,bool PasswordShouldChange=true, DateTime? PasswordExpirationDate=null)
+        {
             if (u == null || u.UserName == null || Password == null)
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context Register error,null UserProfile or password");
             }
-            if (!Authorizer.IsAlphaNumeric(u.UserName, Password))
+            if (!Authorizer.IsValidPassword(Password))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
             }
-            if (!Authorizer.IsValidString(u.UserName) || !Authorizer.IsValidString(Password))
-            {
-                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
-            }
-
-            using (Authorizer context = new Authorizer())
-            {
-                return context.EntityDb.DoCommand<SignedUser>("sp_Ad_UserRegister",
-                DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password), CommandType.StoredProcedure);
-            }
-        }
-
-        public static int Register(UserProfile u, string Password)
-        {
-            if (u == null || u.UserName == null || Password == null)
-            {
-                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context Register error,null UserProfile or password");
-            }
-            if (!Authorizer.IsAlphaNumeric(u.UserName, Password))
+            if (!Authorizer.IsValidUserName(u.UserName))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
-            }
-            if (!Authorizer.IsValidString(u.UserName) || !Authorizer.IsValidString(Password))
-            {
-                throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
             }
 
             using (Authorizer context = new Authorizer())
             {
                 return context.EntityDb.Context().ExecuteReturnValue("sp_Ad_UserRegister",-1,
-                "DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password, CommandType.StoredProcedure);
+                "DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password, "SendResetToken", SendResetToken, "PasswordShouldChange", PasswordShouldChange, "PasswordExpirationDate", PasswordExpirationDate, CommandType.StoredProcedure);
             }
         }
 
@@ -200,11 +199,11 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,null user name or password");
             }
-            if (!IsAlphaNumeric(Password))//(UserName, Password))
+            if (!IsValidPassword(Password))//(UserName, Password))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
             }
-            if (!IsValidString(UserName) || !IsValidString(Password))
+            if (!IsValidUserName(UserName))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
             }
@@ -239,11 +238,11 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,null user name or password");
             }
-            if (!IsAlphaNumeric(Password))//(UserName, Password))
+            if (!IsValidPassword(Password))//(UserName, Password))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
             }
-            if (!IsValidString(UserName) || !IsValidString(Password))
+            if (!IsValidUserName(UserName))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
             }
@@ -325,11 +324,11 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,null user name or password");
             }
-            if (!Authorizer.IsAlphaNumeric(UserName, Password))
+            if (!Authorizer.IsValidPassword(Password))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
             }
-            if (!Authorizer.IsValidString(UserName) || !Authorizer.IsValidString(Password))
+            if (!Authorizer.IsValidUserName(UserName))
             {
                 throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
             }
@@ -368,6 +367,28 @@ namespace Nistec.Web.Security
                 {
                     return false;
                 }
+            }
+            return true;
+        }
+        public static bool IsValidPassword(string expression)
+        {
+            Regex regex = new Regex(@"^[a-zA-Z0-9\.\-_!#@]+$");
+
+            if (!regex.Match(expression).Success)
+            {
+                return false;
+            }
+            return true;
+        }
+        public static bool IsValidUserName(string s)
+        {
+            if (!Regx.RegexValidateIgnoreCase(@"^[a-zA-Z0-9\.\-_]+$", s))
+            {
+                return false;
+            }
+            if (Regx.RegexValidateIgnoreCase(@"(\s|)(drop|create|alter|delete|insert|update|select|from|exec|execute|script)\s.*", s))
+            {
+                return false;
             }
             return true;
         }
@@ -427,11 +448,11 @@ namespace Nistec.Web.Security
             {
                 throw new ArgumentException("Authorizer_Context error,null user name or password");
             }
-            if (!Authorizer.IsAlphaNumeric(UserName, Password))
+            if (!Authorizer.IsValidPassword(Password))
             {
                 throw new ArgumentException("Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
             }
-            if (!Authorizer.IsValidString(UserName) || !Authorizer.IsValidString(Password))
+            if (!Authorizer.IsValidUserName(UserName))
             {
                 throw new ArgumentException("Authorizer_Context error,Illeagal user name or password");
             }
