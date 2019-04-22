@@ -195,6 +195,10 @@ namespace Nistec.Web.Security
         public const string DataSplitter = "-";
         public const string DataSplitEscape = "%";
 
+        public UserProfile Copy() {
+            return (UserProfile)this.MemberwiseClone();
+        }
+
         #region static get
 
         public static UserProfile GetByEmail(string Email)
