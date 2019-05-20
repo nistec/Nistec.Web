@@ -140,6 +140,10 @@ namespace Nistec.Web.Security
         public bool IsMobile { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
         public int ExType { get; set; }
+        [EntityProperty(EntityPropertyType.NA)]
+        public string AppName { get; set; }
+        [EntityProperty(EntityPropertyType.NA)]
+        public string HostClient { get; set; }
 
         //[EntityProperty]
         //public int ApplicationId { get; set; }

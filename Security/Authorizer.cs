@@ -267,7 +267,8 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized Account");
             }
-
+            user.HostClient = HostClient;
+            user.AppName = AppName;
             return (T)user;
         }
 

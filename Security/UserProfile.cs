@@ -612,6 +612,8 @@ namespace Nistec.Web.Security
         PermsValue DefaultRule { get;}
             
         int EvaluationDays { get; set; }
+        string HostClient { get; set; }
+        string AppName { get; set; }
     }
 
     public interface IUserProfile : IEntityItem
