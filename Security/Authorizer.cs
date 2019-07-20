@@ -109,31 +109,7 @@ namespace Nistec.Web.Security
             }
         }
 
-        //public static SignedUser Register(UserProfile u)
-        //{
-        //    string Password = Authorizer.GenerateRandomPassword(6);
-
-        //    if (u == null || u.UserName == null || Password == null)
-        //    {
-        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context Register error,null UserProfile or password");
-        //    }
-        //    if (!Authorizer.IsAlphaNumeric(u.UserName, Password))
-        //    {
-        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illegal UserName or password, expect AlphaNumeric");
-        //    }
-        //    if (!Authorizer.IsValidString(u.UserName) || !Authorizer.IsValidString(Password))
-        //    {
-        //        throw new SecurityException(AuthState.UnAuthorized, "Authorizer_Context error,Illeagal user name or password");
-        //    }
-
-        //    using (Authorizer context = new Authorizer())
-        //    {
-        //        return context.EntityDb.DoCommand<SignedUser>("sp_Ad_UserRegister",
-        //        DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password), CommandType.StoredProcedure);
-        //    }
-        //}
-
-        public static int Register(UserProfile u, string Password, bool SendResetToken=true,bool PasswordShouldChange=true, DateTime? PasswordExpirationDate=null)
+        public static int Register(UserRegister u, string Password, bool SendResetToken=true,bool PasswordShouldChange=true, DateTime? PasswordExpirationDate=null)
         {
             if (u == null || u.UserName == null || Password == null)
             {

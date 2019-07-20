@@ -140,7 +140,7 @@ namespace Nistec.Web.Security
         void SignIn(ISignedUser user, bool createPersistentCookie);
         void SignOut();
         void SetAuthenticatedUserForRequest(ISignedUser user);
-        ISignedUser GetAuthenticatedUser();
+        ISignedUser GetAuthenticatedUser(UserDataVersion version);
     }
 
     

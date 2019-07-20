@@ -23,21 +23,26 @@ namespace Nistec.Web.Security
             get { return _isAuthenticated; }
         }
 
-        public static ISignedUser GetCurrent()
+        public static ISignedUser GetCurrent(UserDataVersion version)
         {
             var form = new FormsAuth();
-            return form.GetAuthenticatedUser();
+            return form.GetAuthenticatedUser(version);
         }
-        public static IUser GetCurrent(IHttpContextAccess httpContextAccess)
+        public static ISignedUser GetCurrent(IHttpContextAccess httpContextAccess, UserDataVersion version)
         {
             var form = new FormsAuth(httpContextAccess);
-            return form.GetAuthenticatedUser();
+            return form.GetAuthenticatedUser(version);
         }
+        //public static IUser GetCurrent(IHttpContextAccess httpContextAccess, UserDataVersion version)
+        //{
+        //    var form = new FormsAuth(httpContextAccess);
+        //    return form.GetAuthenticatedUser(version);
+        //}
 
-        public static bool IsCurrentAuthenticated(IHttpContextAccess httpContextAccess)
+        public static bool IsCurrentAuthenticated(IHttpContextAccess httpContextAccess, UserDataVersion version)
         {
             var form = new FormsAuth(httpContextAccess);
-            return form.IsAuthenticatedUser();
+            return form.IsAuthenticatedUser(version);
         }
 
         public static FormsAuth Instance { get { return new FormsAuth(); } }
@@ -107,19 +112,19 @@ namespace Nistec.Web.Security
             return form.SignIn(loginName, pass, createPersistentCookie, enableException);
         }
 
-        public static AuthState DoSignIn(string loginName, string pass, bool createPersistentCookie=true)
+        public static AuthState DoSignIn(string loginName, string pass, UserDataVersion version, bool createPersistentCookie=true)
         {
             FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
-            return form.SignIn(loginName, pass, createPersistentCookie);
+            return form.SignIn(loginName, pass, version, createPersistentCookie);
         }
 
-        public static AuthState DoSignIn(string loginName, string pass, bool createPersistentCookie, string HostClient, string HostReferrer, string AppName,bool IsMobile)
+        public static AuthState DoSignIn(string loginName, string pass, UserDataVersion version, bool createPersistentCookie, string HostClient, string HostReferrer, string AppName,bool IsMobile)
         {
             FormsAuth form = new FormsAuth(new HttpContextAccess());// null);
-            return form.SignIn(loginName, pass, createPersistentCookie, HostClient, HostReferrer, AppName, IsMobile);
+            return form.SignIn(loginName, pass, version, createPersistentCookie, HostClient, HostReferrer, AppName, IsMobile);
         }
 
-        public AuthState SignIn(string loginName, string pass, bool createPersistentCookie, string HostClient=null, string HostReferrer=null, string AppName=null, bool? IsMobile=null)
+        public AuthState SignIn(string loginName, string pass, UserDataVersion version, bool createPersistentCookie, string HostClient=null, string HostReferrer=null, string AppName=null, bool? IsMobile=null)
         {
             try
             {
@@ -134,8 +139,7 @@ namespace Nistec.Web.Security
                     Log.Error("User not Authenticated");
                     return AuthState.UnAuthorized;
                 }
-                //user.Data = UserDataContext.GetUserDataEx(user.AccountId,user.UserId);
-                user.SetUserDataEx();
+                user.SetUserDataEx(version);
                 SignIn(user, createPersistentCookie);
                 return (AuthState)user.State;//. IsAuthenticated;
             }
@@ -146,7 +150,7 @@ namespace Nistec.Web.Security
             }
         }
 
-        public ISignedUser SignInUser<T>(string loginName, string pass, bool createPersistentCookie, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T:ISignedUser
+        public ISignedUser SignInUser<T>(string loginName, string pass, UserDataVersion version, bool createPersistentCookie, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T:ISignedUser
         {
             try
             {
@@ -162,7 +166,7 @@ namespace Nistec.Web.Security
                     throw new SecurityException(AuthState.UnAuthorized, "User not Authenticated");
                 }
                 //user.Data = UserDataContext.GetUserDataEx(user.AccountId,user.UserId);
-                user.SetUserDataEx();
+                user.SetUserDataEx(version);
                 SignIn(user, createPersistentCookie);
                 return user;// (AuthState)user.State;//. IsAuthenticated;
             }
@@ -264,8 +268,8 @@ namespace Nistec.Web.Security
             
             //user.IsMobile= DeviceHelper.IsMobile(this._httpContextAccess.Current());
 
-            var userData = user.UserData();// Convert.ToString(user.UserId);
-
+            var userData = user.UserData(user.Version);// Convert.ToString(user.UserId);
+            
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
                 user.UserName,
@@ -334,9 +338,9 @@ namespace Nistec.Web.Security
             _isAuthenticated = true;
         }
 
-        public bool IsAuthenticatedUser()
+        public bool IsAuthenticatedUser(UserDataVersion version)
         {
-            GetAuthenticatedUser();
+            GetAuthenticatedUser(version);
             return IsAuthenticated;
         }
 
@@ -352,7 +356,7 @@ namespace Nistec.Web.Security
             }
         }
 
-        public ISignedUser GetAuthenticatedUser()
+        public ISignedUser GetAuthenticatedUser(UserDataVersion version)
         {
             if (_signedInUser != null || _isAuthenticated)
                 return _signedInUser;
@@ -366,7 +370,8 @@ namespace Nistec.Web.Security
             var formsIdentity = (FormsIdentity)httpContext.User.Identity;
             //var userData = formsIdentity.Ticket.UserData;
             //string userName = formsIdentity.Name;
-            var signedUser = new SignedUser(formsIdentity);
+            var signedUser = SignedUser.Parse(formsIdentity, version);
+            //var signedUser = new SignedUser(formsIdentity);
             _isAuthenticated = signedUser.IsAuthenticated;
             if (signedUser.IsAuthenticated == false)
             {

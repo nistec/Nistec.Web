@@ -12,7 +12,14 @@ using System.Web.Security;
 
 namespace Nistec.Web.Security
 {
-    
+
+    public enum UserDataVersion
+    {
+        Json,
+        DataJson,
+        DataPipe
+    }
+
     [Entity("UserProfile", EntityMode.Config)]
     public class UserProfileContext : EntityContext<UserProfile>
     {
@@ -32,35 +39,22 @@ namespace Nistec.Web.Security
 
         #endregion
     }
-    //[Entity("UserRegister", EntityMode.Config)]
-    //public class UserRegisterContext : EntityContext<UserProfile>
-    //{
-    //    #region ctor
-
-    //    public UserRegisterContext(UserProfile user)
-    //    {
-
-    //    }
-
-    //    #endregion
-
-
-    //    public SignedUser Register(UserProfile u, string Password)
-    //    {
-    //        using (UserProfileContext context = new UserProfileContext())
-    //        {
-    //            return context.EntityDb.DoCommand<SignedUser>(
-    //            DataParameter.GetSql("DisplayName",u.DisplayName,"Email",u.Email,"Phone",u.Phone,"UserName",u.UserName,"UserRole",u.UserRole,"AccountId",u.AccountId,"Lang",u.Lang,"Evaluation",u.Evaluation,"IsBlocked",u.IsBlocked,"Password",Password));
-    //        }
-    //    }
-    //}
-
 
     public class UserRegister : UserProfile
     {
         public UserRegister() {
             this.Creation = DateTime.Now;
+            this.Modified = DateTime.Now;
         }
+
+        //[EntityProperty]
+        //public string Email { get; set; }
+        //[EntityProperty]
+        //public string Phone { get; set; }
+        //[EntityProperty]
+        //public DateTime Creation { get; set; }
+        //[EntityProperty]
+        //public bool IsBlocked { get; set; }
 
         //public UserRegister(string UserName, int UserRole, string Email, string Phone, int AccountId, string Lang, int Evaluation, bool IsBlocked, string DisplayName, string Password)
         //{
@@ -137,6 +131,11 @@ namespace Nistec.Web.Security
 
         [EntityProperty]
         public string RoleName { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        public int AccountCategory { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        public string AccountName { get; set; }
+
     }
     [EntityMapping("vw_UserInfo", "vw_UserInfo", "משתמשים")]
     public class UserItemInfo : IEntityItem
@@ -156,6 +155,8 @@ namespace Nistec.Web.Security
         [EntityProperty(EntityPropertyType.Identity)]
         public int UserId { get; set; }
         [EntityProperty]
+        public int AccountId { get; set; }
+        [EntityProperty]
         public int UserRole { get; set; }
         [EntityProperty]
         public string UserName { get; set; }
@@ -164,25 +165,21 @@ namespace Nistec.Web.Security
         [EntityProperty]
         public string Phone { get; set; }
         [EntityProperty]
-        public int AccountId { get; set; }
-        [EntityProperty]
         public string Lang { get; set; }
         [EntityProperty]
         public int Evaluation { get; set; }
         [EntityProperty]
         public bool IsBlocked { get; set; }
-        [EntityProperty]
-        public DateTime Creation { get; set; }
 
         [EntityProperty(EntityPropertyType.View)]
-        public int AccountCategory { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        public string AccountName { get; set; }
+        public DateTime Creation { get; set; }
+        [EntityProperty]
+        public DateTime Modified { get; set; }
+        [EntityProperty]
+        public string Profession { get; set; }
 
         [EntityProperty]
         public int ParentId { get; set; }
-        [EntityProperty]
-        public int Profession { get; set; }
         [EntityProperty]
         public bool IsVirtual { get; set; }
        
@@ -258,6 +255,7 @@ namespace Nistec.Web.Security
             return user;
         }
 
+       
         public static string LookupUserName(int UserId)
         {
             if (UserId <= 0)
@@ -282,6 +280,15 @@ namespace Nistec.Web.Security
             }
         }
 
+        public static NameValueArgs DecodeUserData(string userData)
+        {
+            NameValueArgs Data = NameValueArgs.ParseJson(userData);
+            if (Data == null || Data.Count == 0)
+            {
+                throw new Exception("Invalid User Data");
+            }
+            return Data;
+        }
         #endregion
 
         public UserResult Update(UserProfile newItem)
@@ -367,133 +374,19 @@ namespace Nistec.Web.Security
 
         public UserProfile() { }
 
-        public UserProfile(string userData, string userName)
-        {
-            UserName = userName;
-            Decode(userData);
-        }
-
-        public UserProfile(FormsIdentity identity) 
-        {
-            UserName = identity.Name;
-            Decode(identity.Ticket.UserData);
-        }
-
-        //[EntityProperty]
-        //public string DisplayName { get; set; }
-
-
-        //[EntityProperty(EntityPropertyType.Identity)]
-        //public int UserId { get; set; }
-        //[EntityProperty]
-        //public int UserRole { get; set; }
-        //[EntityProperty]
-        //public string UserName { get; set; }
-        //[EntityProperty]
-        //public string Email { get; set; }
-        //[EntityProperty]
-        //public string Phone { get; set; }
-        ////[EntityProperty]
-        ////public int ApplicationId { get; set; }
-        //[EntityProperty]
-        //public int AccountId { get; set; }
-        //[EntityProperty]
-        //public string Lang { get; set; }
-        ////[EntityProperty]
-        ////public string Perms { get; set; }
-        ////[EntityProperty]
-        ////public int OwnerId { get; set; }
-        //[EntityProperty]
-        //public int Evaluation { get; set; }
-        //[EntityProperty]
-        //public bool IsBlocked { get; set; }
-        //[EntityProperty]
-        //public DateTime Creation { get; set; }
-
-
-
-        //public string UserData(int ApplicationId, int OwnerId, string Perms)
+        //public UserProfile(string userData, string userName)
         //{
-        //    return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}", ApplicationId, AccountId, UserId, UserRole, OwnerId, Lang, Perms);
+        //    UserName = userName;
+        //    Decode(userData);
         //}
 
-        #region User Data Json
+        //public UserProfile(FormsIdentity identity, UserDataVersion version) 
+        //{
+        //    UserName = identity.Name;
 
-        public void SetUserDataJson()
-        {
-            DataJson = UserDataContext.GetUserDataJson(AccountId, UserId);
-        }
+        //    Decode(identity.Ticket.UserData, version);
+        //}
 
-        [EntityProperty(EntityPropertyType.NA)]
-        public string DataJson { get; set; }
-        public string UserDataJson()
-        {
-            string genericData = Data == null ? "" : Data.ToJson();
-            object[] args = new object[] { "acid", AccountId, "uid", UserId, "role", UserRole, "lang", Lang, "acname", AccountName, "category", AccountCategory, "uname", DisplayName, "pid", ParentId, "data", genericData };
-            return JsonSerializer.ConvertToJson(args, null);
-
-            //return ""+ string.Format("aid:{0},uid:{1},role:{2},lang:{3},aname:{4},category:{5},uname{6},pid:{7},data:{8}", AccountId, UserId, UserRole, Lang, AccountName, AccountCategory, DisplayName, ParentId, genericData)+""+ DataJson;
-        }
-        public static string UserDataToJson(string userData)
-        {
-            string[] data = userData.Split(DataSplitterCh);
-            string genericData = "";
-            string dataargs = data[8];
-            if (!string.IsNullOrEmpty(dataargs))
-            {
-                dataargs = BaseConverter.UnEscape(dataargs, DataSplitter, DataSplitEscape);
-                genericData = JsonSerializer.ConvertToJson(dataargs.Split('|'), null);
-            }
-
-            data[4] = BaseConverter.UnEscape(data[4], DataSplitter, DataSplitEscape);
-            data[6] = BaseConverter.UnEscape(data[6], DataSplitter, DataSplitEscape);
-
-            object[] args = new object[] { "acid", data[0], "uid", data[1], "role", data[2], "lang", data[3], "acname", data[4], "category", data[5], "uname", data[6], "pid", data[7], "data", genericData };
-            return JsonSerializer.ConvertToJson(args, null);
-        }
-        #endregion
-
-        [EntityProperty(EntityPropertyType.NA)]
-        public NameValueArgs Claims { get; set; }
-        public string ClaimsSerilaize()
-        {
-            string genericData = (Claims != null) ? Claims.ToKeyValuePipe() : null;
-            return genericData;
-        }
-        public NameValueArgs ClaimsDeserilaize(string data)
-        {
-            string[] args= data.SplitTrim('|');
-            NameValueArgs claims = new NameValueArgs(args);
-            return claims;
-        }
-
-        public void SetUserDataEx()
-        {
-            Data = UserDataContext.GetUserDataEx(AccountId, UserId);
-        }
-
-        [EntityProperty(EntityPropertyType.NA) ]
-        public NameValueArgs Data { get; set; }
-
-        public string GetDataValue(string key)
-        {
-            if (Data == null)
-                return "";
-            return Data.Get(key);
-        }
-        public T GetDataValue<T>(string key)
-        {
-            if(Data==null)
-                return default(T);
-            return Data.Get<T>(key);
-        }
-
-        public string UserData()
-        {
-            string genericData = (Data != null) ? Data.ToKeyValuePipe() : null;
-
-            return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", AccountId, UserId, UserRole, Lang, BaseConverter.Escape(AccountName, UserProfile.DataSplitter, DataSplitEscape), AccountCategory, BaseConverter.Escape(DisplayName, DataSplitter, DataSplitEscape), ParentId, BaseConverter.Escape(genericData, DataSplitter, DataSplitEscape));
-        }
 
         public bool IsAuthenticated
         {
@@ -521,151 +414,112 @@ namespace Nistec.Web.Security
             }
         }
 
-        //public bool IsLessThenManager
-        //{
-        //    get { return UserRole < 5; }
-        //}
-        //public bool IsManager
-        //{
-        //    get { return UserRole >=5; }
-        //}
         public bool IsAdmin
         {
             get { return UserRole == 9; }
         }
-        //public bool IsMaster
+        
+        
+
+        //public static UserProfile Get(string userData)
         //{
-        //    get { return UserRole >= 7; }
-        //}
-
-        //public bool IsManagerOrAdmin
-        //{
-        //    get { return UserRole == 5 || UserRole==9; }
-        //}
-
-        //public string Encode()
-        //{
-        //    return string.Format("{0}-{1}-{2}-{3}", ApplicationId, AccountId, UserId, UserType);
-        //}
-
-        bool Decode(string userData)
-        {
-            //int applicationId = 0;
-            int accountId = 0;
-            int userId = 0;
-            int userRole = 0;
-            int accountCategory = 0;
-            string lang = "he";
-            string accountName = null;
-            string displayName=null;
-            int parentId=0;
-            string dataConfig = null;
-
-            if (GenericArgs.SplitArgs<int, int, int, string, string, int, string, int, string>(userData, DataSplitterCh, ref accountId, ref userId, ref userRole, ref lang, ref accountName, ref accountCategory, ref displayName, ref parentId, ref dataConfig))
-            {
-                UserId = userId;
-                AccountId = accountId;
-                UserRole = userRole;
-                Lang = lang;
-                AccountCategory = 0;
-                AccountName = BaseConverter.UnEscape(accountName, DataSplitter, DataSplitEscape);
-                DisplayName = BaseConverter.UnEscape(displayName, DataSplitter, DataSplitEscape);
-                ParentId = parentId;
-                var args = BaseConverter.UnEscape(dataConfig, DataSplitter, DataSplitEscape);
-                if (!string.IsNullOrEmpty(args))
-                {
-                    var array= args.Split('|');
-                    Data = NameValueArgs.Get(array);
-                    //Data = NameValueArgs.Create(args);// GenericRecord.Parse(BaseConverter.UnEscape(dataConfig, "-", "%"));
-                }
-                return true;
-            }
-
-            //if (GenericArgs.SplitArgs<int, int, int, int, int, string, string>(userData, '-', ref applicationId, ref accountId, ref userId, ref userRole, ref ownerId, ref lang, ref perms))
-            //{
-            //    UserId = userId;
-            //    AccountId = accountId;
-            //    UserRole = userRole;
-            //    ApplicationId = applicationId;
-            //    OwnerId = ownerId;
-            //    Lang = lang;
-            //    Perms = perms;
-            //    return true;
-            //}
-            return false;
-        }
-
-        public static UserProfile Get(string userData)
-        {
-            var user= new UserProfile();
-            if (user.Decode(userData))
-                return user;
-            return null;
-         }
+        //    var user= new UserProfile();
+        //    if (user.Decode(userData))
+        //        return user;
+        //    return null;
+        // }
     }
     //AuthState
-    public interface ISignedUser : IUserProfile,IUser
+    public interface ISignedUser : IUserProfile//,IUser
     {
         //[EntityProperty]
         //int State { get; set; }
-
+        UserDataVersion Version { get; set; }
         PermsValue DefaultRule { get;}
             
         int EvaluationDays { get; set; }
         string HostClient { get; set; }
         string AppName { get; set; }
-    }
 
-    public interface IUserProfile : IEntityItem
-    {
-        #region Properties
-        [EntityProperty]
-        string DisplayName { get; set; }
-        [EntityProperty(EntityPropertyType.Identity)]
-        int UserId { get; set; }
+        int State { get; set; }
+        bool IsAuthenticated { get; }
         //[EntityProperty]
-        //int UserRole { get; set; }
-        //[EntityProperty]
-        //string UserName { get; set; }
-        //[EntityProperty]
-        //string Email { get; set; }
-        //[EntityProperty]
-        //string Phone { get; set; }
-        //[EntityProperty]
-        //int AccountId { get; set; }
-        [EntityProperty]
-        string Lang { get; set; }
-        //[EntityProperty]
-        //int Evaluation { get; set; }
-        [EntityProperty]
-        bool IsBlocked { get; set; }
-        [EntityProperty]
-        DateTime Creation { get; set; }
+        //bool IsAdmin { get; }
 
         [EntityProperty(EntityPropertyType.View)]
         int AccountCategory { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         string AccountName { get; set; }
-
-        [EntityProperty]
-        int ParentId { get; set; }
-        [EntityProperty]
-        int Profession { get; set; }
-        [EntityProperty]
-        bool IsVirtual { get; set; }
-
-        #endregion
+        [EntityProperty(EntityPropertyType.View)]
+        int AccType { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        string AccAccess { get; set; }
 
         [EntityProperty(EntityPropertyType.NA)]
         NameValueArgs Claims { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
         NameValueArgs Data { get; set; }
 
-        void SetUserDataEx();
+        void SetUserDataEx(UserDataVersion version);
+
+        string UserData(UserDataVersion version);
 
         //string UserData();
 
         //bool IsAuthenticated { get; }
+
+    }
+
+    public interface IUserProfile : IEntityItem
+    {
+
+        #region IUser
+
+        [EntityProperty(EntityPropertyType.Identity)]
+        int UserId { get; set; }
+        [EntityProperty]
+        string DisplayName { get; set; }
+        [EntityProperty]
+        int UserRole { get; set; }
+        [EntityProperty]
+        string UserName { get; set; }
+        [EntityProperty]
+        string Email { get; set; }
+        [EntityProperty]
+        string Phone { get; set; }
+        [EntityProperty]
+        int AccountId { get; set; }
+        [EntityProperty]
+        string Lang { get; set; }
+        [EntityProperty]
+        int Evaluation { get; set; }
+        [EntityProperty]
+        bool IsBlocked { get; set; }
+        //[EntityProperty]
+        //DateTime Creation { get; set; }
+
+        //string UserData();
+
+        #endregion
+
+        #region Properties
+        //[EntityProperty]
+        //string DisplayName { get; set; }
+        //[EntityProperty(EntityPropertyType.Identity)]
+        //int UserId { get; set; }
+        // [EntityProperty]
+        //string Lang { get; set; }
+
+        [EntityProperty]
+        int ParentId { get; set; }
+        //[EntityProperty]
+        //int Profession { get; set; }
+        [EntityProperty]
+        bool IsVirtual { get; set; }
+
+        #endregion
+
+        
 
     }
 }
