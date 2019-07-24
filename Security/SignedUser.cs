@@ -7,12 +7,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Security;
 
 namespace Nistec.Web.Security
 {
-      
+    public enum PasswordScore
+    {
+        Blank = 0,
+        Denied = 1,
+        Weak = 3,
+        Medium = 6,
+        Strong = 10,
+
+        //VeryWeak = 1,
+        //Weak = 2,
+        //Medium = 3,
+        //Strong = 4,
+        //VeryStrong = 5
+    }
+
     public class SignedUser : UserProfile, ISignedUser//, IUser
     {
         internal const string SessionKey = "SignedUser";
@@ -126,6 +141,40 @@ namespace Nistec.Web.Security
         internal static SignedUser NotAuthrized(AuthState state, string desc)
         {
             return new SignedUser() { State = (int)state, StateDescription = desc };
+        }
+
+        public static PasswordScore CheckStrength(string password)
+        {
+            int score = 0;
+
+            string strongRegex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})";
+            string mediumRegex = @"^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})";
+            
+
+            if (password.Length < 1)
+                return PasswordScore.Blank;
+            if (password.Length < 5)
+                return PasswordScore.Denied;
+            if (Regex.Match(password, strongRegex, RegexOptions.ECMAScript).Success)
+                return PasswordScore.Strong;
+            if (Regex.Match(password, mediumRegex, RegexOptions.ECMAScript).Success)
+                return PasswordScore.Medium;
+            else
+                return PasswordScore.Weak;
+
+            //if (password.Length >= 8)
+            //    score++; 
+            //if (password.Length >= 12)
+            //    score++; 
+            //if (Regex.Match(password, @"/\d+/", RegexOptions.ECMAScript).Success)
+            //    score++; 
+            //if (Regex.Match(password, @"/[a-z]/", RegexOptions.ECMAScript).Success &&
+            //  Regex.Match(password, @"/[A-Z]/", RegexOptions.ECMAScript).Success)
+            //    score++; 
+            //if (Regex.Match(password, @"/.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]/", RegexOptions.ECMAScript).Success)
+            //    score++;
+
+            return (PasswordScore)score;
         }
 
         public SignedUser() { }

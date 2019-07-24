@@ -15,13 +15,28 @@ namespace Nistec.Web.Security
         EvaluationExpired = 2,//--2=Evaluation expired
         Blocked = 3,//--3=account blocked
         NonConfirmed = 4,//--4=non confirmed, username or password exists
+        //UserRemoved = 5,//user removed
+        //UserNotRemoved = 6,//user not removed
+        PasswordShouldChange=7,//UserUpdated = 7,//not used
+        PasswordManyFailures=8,// UserNotUpdated = 8,//not used
+        Succeeded = 10//--10=ok
+    }
+
+    public enum UserUpdateState
+    {
+        Failed = -1,
+        UnAuthorized = 0, //--0=auth faild
+        IpNotAlowed = 1,//--1=ip not alowed
+        EvaluationExpired = 2,//--2=Evaluation expired
+        Blocked = 3,//--3=account blocked
+        NonConfirmed = 4,//--4=non confirmed, username or password exists
         UserRemoved = 5,//user removed
         UserNotRemoved = 6,//user not removed
         UserUpdated = 7,//not used
         UserNotUpdated = 8,//not used
         Succeeded = 10//--10=ok
-    }
 
+    }
     //public enum UserSole
     //{
     //    User = 0,

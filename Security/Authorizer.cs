@@ -192,19 +192,31 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized User");
             }
-
-            AuthState state = (AuthState)user.State;
-            if (state != AuthState.Succeeded)
-            {
-                throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
-            }
-
             if (user.AccountId <= 0)
             {
                 throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized Account");
             }
 
-            return user;
+            AuthState state = (AuthState)user.State;
+
+            switch (state)
+            {
+                case AuthState.PasswordShouldChange:
+                case AuthState.NonConfirmed:
+                case AuthState.Succeeded:
+                    user.HostClient = HostClient;
+                    user.AppName = AppName;
+                    return user;
+                default:
+                    throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
+            }
+
+            //AuthState state = (AuthState)user.State;
+            //if (state != AuthState.Succeeded)
+            //{
+            //    throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
+            //}
+            //return user;
         }
 
         public static T Login<T>(string UserName, string Password, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T: ISignedUser
@@ -232,20 +244,24 @@ namespace Nistec.Web.Security
             {
                 throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized User");
             }
-
-            AuthState state = (AuthState)user.State;
-            if (state != AuthState.Succeeded)
-            {
-                throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
-            }
-
             if (user.AccountId <= 0)
             {
                 throw new SecurityException(AuthState.UnAuthorized, "AuthorizationException, Un Authorized Account");
             }
-            user.HostClient = HostClient;
-            user.AppName = AppName;
-            return (T)user;
+
+            AuthState state = (AuthState)user.State;
+
+            switch (state)
+            {
+                case AuthState.PasswordShouldChange:
+                case AuthState.NonConfirmed:
+                case AuthState.Succeeded:
+                    user.HostClient = HostClient;
+                    user.AppName = AppName;
+                    return (T)user;
+                default:
+                    throw new SecurityException(state, "AuthorizationException, Un Authorized, status:" + state.ToString());
+            }
         }
 
         #endregion

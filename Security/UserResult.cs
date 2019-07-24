@@ -228,15 +228,46 @@ namespace Nistec.Web.Security
                     desc = "User is blocked"; break;
                 case AuthState.NonConfirmed:// = 4,//--4=non confirmed, username or password exists
                     desc = "Non confirmed, UserName allready exists"; break;
-                case AuthState.UserRemoved:// = 5,//user removed
-                    desc = "User removed"; break;
-                case AuthState.UserNotRemoved:// = 6,//user not removed
-                    desc = "User not removed"; break;
-                //case AuthState.UserUpdated:// = 7,//user updated
-                //    desc = "User updated"; break;
-                //case AuthState.UserNotUpdated:// = 7,//user updated
-                //    desc = "User not updated"; break;
+                //case AuthState.UserRemoved:// = 5,//user removed
+                //    desc = "User removed"; break;
+                //case AuthState.UserNotRemoved:// = 6,//user not removed
+                //    desc = "User not removed"; break;
+                case AuthState.PasswordShouldChange:// = 7,//user updated
+                    desc = "Password Should Change"; break;
+                case AuthState.PasswordManyFailures:// = 8,//user updated
+                    desc = "Many Failures"; break;
                 case AuthState.Succeeded:// = 10//--10=ok
+                    desc = "Ok"; break;
+            }
+            return new UserResult() { Status = (int)state, Message = desc };
+        }
+
+        public static UserResult Get(UserUpdateState state)
+        {
+            string desc = "";
+            switch (state)
+            {
+                case UserUpdateState.Failed:// = -1,
+                    desc = "Internal error"; break;
+                case UserUpdateState.UnAuthorized:// = 0, //--0=auth faild
+                    desc = "User un authorized"; break;
+                case UserUpdateState.IpNotAlowed:// = 1,//--1=ip not alowed
+                    desc = "Ip not alowed"; break;
+                case UserUpdateState.EvaluationExpired:// = 2,//--2=Evaluation expired
+                    desc = "Evaluation expired"; break;
+                case UserUpdateState.Blocked:// = 3,//--3=account blocked
+                    desc = "User is blocked"; break;
+                case UserUpdateState.NonConfirmed:// = 4,//--4=non confirmed, username or password exists
+                    desc = "Non confirmed, UserName allready exists"; break;
+                case UserUpdateState.UserRemoved:// = 5,//user removed
+                    desc = "User removed"; break;
+                case UserUpdateState.UserNotRemoved:// = 6,//user not removed
+                    desc = "User not removed"; break;
+                case UserUpdateState.UserUpdated:// = 7,//user updated
+                    desc = "User Updated"; break;
+                case UserUpdateState.UserNotUpdated:// = 8,//user updated
+                    desc = "User Not Updated"; break;
+                case UserUpdateState.Succeeded:// = 10//--10=ok
                     desc = "Ok"; break;
             }
             return new UserResult() { Status = (int)state, Message = desc };
@@ -245,21 +276,21 @@ namespace Nistec.Web.Security
         public static UserResult IsDeleted(int result)
         {
             if (result == -1)
-                return Get(AuthState.Failed);
+                return Get(UserUpdateState.Failed);
             if (result == 1)
-                return Get(AuthState.UserRemoved);
+                return Get(UserUpdateState.UserRemoved);
             else
-                return Get(AuthState.UserNotRemoved);
+                return Get(UserUpdateState.UserNotRemoved);
         }
 
         public static UserResult IsUpdated(int result)
         {
             if (result == -1)
-                return Get(AuthState.Failed);
+                return Get(UserUpdateState.Failed);
             if (result == 1)
-                return Get(AuthState.UserUpdated);
+                return Get(UserUpdateState.UserUpdated);
             else
-                return Get(AuthState.UserNotUpdated);
+                return Get(UserUpdateState.UserNotUpdated);
         }
 
         
@@ -268,21 +299,21 @@ namespace Nistec.Web.Security
         [EntityProperty(EntityPropertyType.NA)]
         public string Message { get; set; }
 
-        [EntityProperty(EntityPropertyType.NA)]
-        public bool Commit
-        {
-            get
-            {
-                switch ((AuthState)Status)
-                {
-                    case AuthState.UserRemoved:// = 5,//user removed
-                    //case AuthState.UserUpdated:// = 7,//user updated
-                    case AuthState.Succeeded:// = 10//--10=ok
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        }
+        //[EntityProperty(EntityPropertyType.NA)]
+        //public bool Commit
+        //{
+        //    get
+        //    {
+        //        switch ((AuthState)Status)
+        //        {
+        //            case AuthState.UserRemoved:// = 5,//user removed
+        //            //case AuthState.UserUpdated:// = 7,//user updated
+        //            case AuthState.Succeeded:// = 10//--10=ok
+        //                return true;
+        //            default:
+        //                return false;
+        //        }
+        //    }
+        //}
     }
 }
