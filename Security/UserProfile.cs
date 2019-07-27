@@ -20,6 +20,13 @@ namespace Nistec.Web.Security
         DataPipe
     }
 
+    public enum UserEvaluation
+    {
+        Active = 0,
+        Trial = 1,
+        Blocked = 2
+    }
+
     [Entity("UserProfile", EntityMode.Config)]
     public class UserProfileContext : EntityContext<UserProfile>
     {
@@ -167,9 +174,10 @@ namespace Nistec.Web.Security
         [EntityProperty]
         public string Lang { get; set; }
         [EntityProperty]
-        public int Evaluation { get; set; }
+        public UserEvaluation Evaluation { get; set; }
         [EntityProperty]
         public bool IsBlocked { get; set; }
+    
 
         [EntityProperty(EntityPropertyType.View)]
         public DateTime Creation { get; set; }
@@ -492,7 +500,7 @@ namespace Nistec.Web.Security
         [EntityProperty]
         string Lang { get; set; }
         [EntityProperty]
-        int Evaluation { get; set; }
+        UserEvaluation Evaluation { get; set; }
         [EntityProperty]
         bool IsBlocked { get; set; }
         //[EntityProperty]
