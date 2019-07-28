@@ -375,7 +375,7 @@ namespace Nistec.Web.Security
         }
         public static bool IsValidUserName(string s)
         {
-            if (!Regx.RegexValidateIgnoreCase(@"^[a-zA-Z0-9\.\-_]+$", s))
+            if (!Regx.RegexValidateIgnoreCase(@"^[a-zA-Z0-9@\.\-_]+$", s))
             {
                 return false;
             }

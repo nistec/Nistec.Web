@@ -263,7 +263,7 @@ namespace Nistec.Web.Security
 
         }
 
-
+        [Obsolete("use ResetNewPassword instead")]
         public static int ResetPassword(int accountId, string email, string newpassword, string resetToken)
         {
             //UserProfile user = UserProfile.GetByEmail(email);
@@ -278,8 +278,30 @@ namespace Nistec.Web.Security
 
                 return db.ExecuteReturnValue("sp_Ad_UserResetPass", -1,"Email", email, "AccountId", accountId, "Password", newpassword, "ConfirmationToken", resetToken);
             }
+        }
+        public static int ResetNewPassword(int accountId, string email, string newpassword, string resetToken)
+        {
+            //UserProfile user = UserProfile.GetByEmail(email);
+            //if (user == null)
+            //{
+            //    throw new SecurityException((int)MembershipStatus.EmailNotExists, "The email provided is invalid. Please check the value and try again.");
+            //}
 
+            using (Authorizer context = Authorizer.Instance)
+            {
+                var db = context.EntityDb.Context();
 
+                return db.ExecuteReturnValue("sp_Ad_UserResetNewPass", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken);
+            }
+        }
+        public static int ResetPassword(int UserId, int AssignBy, int AppId)
+        {
+            using (Authorizer context = Authorizer.Instance)
+            {
+                var db = context.EntityDb.Context();
+
+                return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
+            }
         }
 
         public static UserProfile UserVerificationToken(string token)
