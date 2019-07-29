@@ -315,6 +315,15 @@ namespace Nistec.Web.Security
 
         }
 
+        public static string GetUserToken(int UserId, TokenType TokenType)
+        {
+            using (Authorizer context = Authorizer.Instance)
+            {
+                var db = context.EntityDb.Context();
+                return db.ExecuteScalar<string>("sp_Ad_User_Token_Get",null, "UserId", UserId, "TokenType", (int)TokenType);
+            }
+        }
+
         public static string ResetPassword(string username, string resetToken)
         {
             UserProfile user = UserProfile.GetByUserName(username);

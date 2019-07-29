@@ -12,21 +12,7 @@ using System.Web.Security;
 
 namespace Nistec.Web.Security
 {
-
-    public enum UserDataVersion
-    {
-        Json,
-        DataJson,
-        DataPipe
-    }
-
-    public enum UserEvaluation
-    {
-        Active = 0,
-        Trial = 1,
-        Blocked = 2
-    }
-
+    
     [Entity("UserProfile", EntityMode.Config)]
     public class UserProfileContext : EntityContext<UserProfile>
     {

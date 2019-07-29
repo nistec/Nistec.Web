@@ -5,7 +5,25 @@ using System.Text;
 
 namespace Nistec.Web.Security
 {
+    public enum TokenType
+    {
+        PasswordVerificationToken=0,
+        ConfirmationToken=1
+    }
 
+    public enum UserDataVersion
+    {
+        Json,
+        DataJson,
+        DataPipe
+    }
+
+    public enum UserEvaluation
+    {
+        Active = 0,
+        Trial = 1,
+        Blocked = 2
+    }
 
     public enum AuthState
     {
