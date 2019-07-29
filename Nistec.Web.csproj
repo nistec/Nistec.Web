@@ -160,6 +160,7 @@
     <Compile Include="Asp\Sc\UserAuth.cs" />
     <Compile Include="Security\AlwaysAccessibleAttribute.cs" />
     <Compile Include="Security\Authorizer.cs" />
+    <Compile Include="Security\Class1.cs" />
     <Compile Include="Security\DeviceHelper.cs" />
     <Compile Include="Security\SecurityException.cs" />
     <Compile Include="Security\UserAccount.cs" />
