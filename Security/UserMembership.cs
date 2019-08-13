@@ -294,13 +294,13 @@ namespace Nistec.Web.Security
                 return db.ExecuteReturnValue("sp_Ad_UserResetNewPass", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken);
             }
         }
-        public static int ResetPassword(int UserId, int AssignBy, int AppId)
+        public static int ResetPassword(int AccountId, int UserId, int AssignBy, int AppId)
         {
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
+                return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "AccountId", AccountId,"UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
             }
         }
 
