@@ -1,9 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.852
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nistec.Web", "Nistec.Web.csproj", "{8C4CFF01-180E-41A1-9234-0C1B1E207AE5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Library", "Library", "{ED124436-B879-46F2-894A-6B2C8E975BC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nistec.Lib", "..\Nistec.Lib\Nistec.Lib.csproj", "{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nistec.Data", "..\Nistec.Data\Nistec.Data\Nistec.Data.csproj", "{D5FD6C68-86EA-48BF-8F6D-29CE57419500}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nistec.Channels", "..\Nistec.Channels\Nistec.Channels\Nistec.Channels.csproj", "{0839A364-A34D-4143-AD4C-AEF4C7B232AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nistec.Logger", "..\Nistec.Logger\Nistec.Logger.csproj", "{E510DD2C-859C-476C-9901-60EDFC5E71F1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,8 +25,33 @@ Global
 		{8C4CFF01-180E-41A1-9234-0C1B1E207AE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C4CFF01-180E-41A1-9234-0C1B1E207AE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C4CFF01-180E-41A1-9234-0C1B1E207AE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5FD6C68-86EA-48BF-8F6D-29CE57419500}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5FD6C68-86EA-48BF-8F6D-29CE57419500}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5FD6C68-86EA-48BF-8F6D-29CE57419500}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5FD6C68-86EA-48BF-8F6D-29CE57419500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0839A364-A34D-4143-AD4C-AEF4C7B232AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0839A364-A34D-4143-AD4C-AEF4C7B232AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0839A364-A34D-4143-AD4C-AEF4C7B232AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0839A364-A34D-4143-AD4C-AEF4C7B232AC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E510DD2C-859C-476C-9901-60EDFC5E71F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E510DD2C-859C-476C-9901-60EDFC5E71F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E510DD2C-859C-476C-9901-60EDFC5E71F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E510DD2C-859C-476C-9901-60EDFC5E71F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{54F52ED5-AECD-47C6-93D8-7B3358BA7F8C} = {ED124436-B879-46F2-894A-6B2C8E975BC3}
+		{D5FD6C68-86EA-48BF-8F6D-29CE57419500} = {ED124436-B879-46F2-894A-6B2C8E975BC3}
+		{0839A364-A34D-4143-AD4C-AEF4C7B232AC} = {ED124436-B879-46F2-894A-6B2C8E975BC3}
+		{E510DD2C-859C-476C-9901-60EDFC5E71F1} = {ED124436-B879-46F2-894A-6B2C8E975BC3}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6268E97D-E0FD-4E0B-A65C-8A3F85D73038}
 	EndGlobalSection
 EndGlobal
