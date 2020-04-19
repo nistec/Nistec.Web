@@ -458,6 +458,8 @@ namespace Nistec.Web.Security
 
         string UserData(UserDataVersion version);
 
+        [EntityProperty(EntityPropertyType.View)]
+        string Token { get; set; }
         //string UserData();
 
         //bool IsAuthenticated { get; }

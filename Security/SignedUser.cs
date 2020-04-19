@@ -174,7 +174,7 @@ namespace Nistec.Web.Security
             //if (Regex.Match(password, @"/.[!,@,#,$,%,^,&,*,?,_,~,-,£,(,)]/", RegexOptions.ECMAScript).Success)
             //    score++;
 
-            return (PasswordScore)score;
+            //return (PasswordScore)score;
         }
 
         public SignedUser() { }
@@ -292,9 +292,13 @@ namespace Nistec.Web.Security
         public int AccType { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         public string AccAccess { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        public string Token { get; set; }
+
         #endregion
 
         #region Properties ex
+        /*
         //v-e-r-x-m
         //view-edit-remove-export-management
         public bool AllowEdit
@@ -333,9 +337,8 @@ namespace Nistec.Web.Security
         //{
         //    get { return UserRole >= 5; }
         //}
+        */
         #endregion
-
-
 
         #region User Data Json
 
