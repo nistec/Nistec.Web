@@ -15,7 +15,10 @@ namespace Nistec.Web.Security
     {
         Json,
         DataJson,
-        DataPipe
+        DataPipe,
+        DataClaimsKeyValue,
+        DataClaimsJson,
+        DataClaimsEach,
     }
 
     public enum UserEvaluation

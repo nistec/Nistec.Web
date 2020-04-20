@@ -72,6 +72,40 @@ namespace Nistec.Web.Security
         [EntityProperty]
         public DateTime? PasswordExpirationDate { get; set; }
     }
+    [Entity("UserClaims", EntityMode.Config)]
+    public class UserClaimsContext : EntityContext<GenericRecord>
+    {
+
+        #region ctor
+
+        public UserClaimsContext()
+            : base()
+        {
+
+        }
+
+        #endregion
+
+        public static Dictionary<string, string> GetUserClaims(int AccountId, int UserId)
+        {
+            Dictionary<string, string> userdata = null;
+            using (UserClaimsContext context = new UserClaimsContext())
+            {
+                userdata = context.EntityDb.QuerySingle<Dictionary<string, string>>("AccountId", AccountId, "UserId", UserId);
+            }
+
+            return userdata;// == null ? null : userdata.ToJson();
+        }
+
+        public static string GetUserClaimsJson(int AccountId, int UserId)
+        {
+            using (UserClaimsContext context = new UserClaimsContext())
+            {
+                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId);
+            }
+        }
+
+    }
 
     [Entity("UserData", EntityMode.Config)]
     public class UserDataContext : EntityContext<GenericRecord>
@@ -87,12 +121,34 @@ namespace Nistec.Web.Security
   
         #endregion
 
-        public static NameValueArgs GetUserDataEx(int AccountId, int UserId)
+        //public static NameValueArgs GetUserDataEx(int AccountId, int UserId)
+        //{
+        //    NameValueArgs userdata = null;
+        //    using (UserDataContext context = new UserDataContext())
+        //    {
+        //        userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId);
+        //    }
+
+        //    return userdata;// == null ? null : userdata.ToJson();
+        //}
+
+        public static Dictionary<string,string> GetUserDataEx(int AccountId, int UserId)
         {
-            NameValueArgs userdata = null;
+            Dictionary<string, string> userdata = null;
             using (UserDataContext context = new UserDataContext())
             {
-                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId);
+                userdata = context.EntityDb.QuerySingle<Dictionary<string, string>>("AccountId", AccountId, "UserId", UserId);
+            }
+
+            return userdata;// == null ? null : userdata.ToJson();
+        }
+
+        public static IDictionary<string, string> GetUserDataKeyValue(int AccountId, int UserId)
+        {
+            IDictionary<string, string> userdata = null;
+            using (UserDataContext context = new UserDataContext())
+            {
+                userdata = context.EntityDb.QueryDictionary<string>("Key","Value","AccountId", AccountId, "UserId", UserId);
             }
 
             return userdata;// == null ? null : userdata.ToJson();
@@ -449,13 +505,18 @@ namespace Nistec.Web.Security
         [EntityProperty(EntityPropertyType.View)]
         string AccAccess { get; set; }
 
+        //[EntityProperty(EntityPropertyType.NA)]
+        //NameValueArgs Claims { get; set; }
+        //[EntityProperty(EntityPropertyType.NA)]
+        //NameValueArgs Data { get; set; }
+
         [EntityProperty(EntityPropertyType.NA)]
-        NameValueArgs Claims { get; set; }
+        Dictionary<string,string> Claims { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
-        NameValueArgs Data { get; set; }
+        Dictionary<string, string> Data { get; set; }
 
         void SetUserDataEx(UserDataVersion version);
-
+        //void SetUserClaims(UserDataVersion version);
         string UserData(UserDataVersion version);
 
         [EntityProperty(EntityPropertyType.View)]
