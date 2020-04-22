@@ -268,7 +268,7 @@ namespace Nistec.Web.Security
             
             //user.IsMobile= DeviceHelper.IsMobile(this._httpContextAccess.Current());
 
-            var userData = user.UserData(user.Version);// Convert.ToString(user.UserId);
+            var userData = user.UserData(user.UserDataVersion);// Convert.ToString(user.UserId);
             
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,

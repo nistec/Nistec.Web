@@ -7,18 +7,15 @@ namespace Nistec.Web.Security
 {
     public enum TokenType
     {
-        PasswordVerificationToken=0,
-        ConfirmationToken=1
+        PasswordVerificationToken = 0,
+        ConfirmationToken = 1
     }
 
     public enum UserDataVersion
     {
         Json,
         DataJson,
-        DataPipe,
-        DataClaimsKeyValue,
-        DataClaimsJson,
-        DataClaimsEach,
+        DataPipe
     }
 
     public enum UserEvaluation
@@ -38,8 +35,8 @@ namespace Nistec.Web.Security
         NonConfirmed = 4,//--4=non confirmed, username or password exists
         //UserRemoved = 5,//user removed
         //UserNotRemoved = 6,//user not removed
-        PasswordShouldChange=7,//UserUpdated = 7,//not used
-        PasswordManyFailures=8,// UserNotUpdated = 8,//not used
+        PasswordShouldChange = 7,//UserUpdated = 7,//not used
+        PasswordManyFailures = 8,// UserNotUpdated = 8,//not used
         Succeeded = 10//--10=ok
     }
 
@@ -68,21 +65,21 @@ namespace Nistec.Web.Security
     public enum MembershipStatus
     {
         Error = -1,
-        Success                     = 0,//     The user was successfully created.
-        UserNameOrEmailNotExists    = 1,//     The user name was not found in the database.
-        InvalidPasswordFormat       = 2,//     The password is not formatted correctly.
-        InvalidEmailFormat          = 3,//     The e-mail address is not formatted correctly.
-        DuplicateUserNameOrEmail    = 4,//     The user name already exists in the database for the application.
-        UserRejected                = 5,//     The user was not created, for a reason defined by the provider.
-        CouldNotResetPassword       = 6,//     Internal error, could not reset password.
-        InvalidAccountPath          = 7,
-        MembershipNotExists         =8,
-        UserIsBlocked               =9,
-        ResetTokenSent              =10,
-        InvalidUser                 =11,
-        InvalidTokenFormt           =12,
-        TokenVerificationExpired    =13,
-        UserPasswordWasReset        =20
+        Success = 0,//     The user was successfully created.
+        UserNameOrEmailNotExists = 1,//     The user name was not found in the database.
+        InvalidPasswordFormat = 2,//     The password is not formatted correctly.
+        InvalidEmailFormat = 3,//     The e-mail address is not formatted correctly.
+        DuplicateUserNameOrEmail = 4,//     The user name already exists in the database for the application.
+        UserRejected = 5,//     The user was not created, for a reason defined by the provider.
+        CouldNotResetPassword = 6,//     Internal error, could not reset password.
+        InvalidAccountPath = 7,
+        MembershipNotExists = 8,
+        UserIsBlocked = 9,
+        ResetTokenSent = 10,
+        InvalidUser = 11,
+        InvalidTokenFormt = 12,
+        TokenVerificationExpired = 13,
+        UserPasswordWasReset = 20
     }
     //public enum MembershipStatus
     //{
@@ -143,7 +140,7 @@ namespace Nistec.Web.Security
     //                return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
     //        }
     //    }
-   
+
 
 
     //}

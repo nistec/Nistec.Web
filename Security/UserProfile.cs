@@ -12,7 +12,7 @@ using System.Web.Security;
 
 namespace Nistec.Web.Security
 {
-    
+
     [Entity("UserProfile", EntityMode.Config)]
     public class UserProfileContext : EntityContext<UserProfile>
     {
@@ -35,7 +35,8 @@ namespace Nistec.Web.Security
 
     public class UserRegister : UserProfile
     {
-        public UserRegister() {
+        public UserRegister()
+        {
             this.Creation = DateTime.Now;
             this.Modified = DateTime.Now;
         }
@@ -72,40 +73,6 @@ namespace Nistec.Web.Security
         [EntityProperty]
         public DateTime? PasswordExpirationDate { get; set; }
     }
-    [Entity("UserClaims", EntityMode.Config)]
-    public class UserClaimsContext : EntityContext<GenericRecord>
-    {
-
-        #region ctor
-
-        public UserClaimsContext()
-            : base()
-        {
-
-        }
-
-        #endregion
-
-        public static Dictionary<string, string> GetUserClaims(int AccountId, int UserId)
-        {
-            Dictionary<string, string> userdata = null;
-            using (UserClaimsContext context = new UserClaimsContext())
-            {
-                userdata = context.EntityDb.QuerySingle<Dictionary<string, string>>("AccountId", AccountId, "UserId", UserId);
-            }
-
-            return userdata;// == null ? null : userdata.ToJson();
-        }
-
-        public static string GetUserClaimsJson(int AccountId, int UserId)
-        {
-            using (UserClaimsContext context = new UserClaimsContext())
-            {
-                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId);
-            }
-        }
-
-    }
 
     [Entity("UserData", EntityMode.Config)]
     public class UserDataContext : EntityContext<GenericRecord>
@@ -118,37 +85,15 @@ namespace Nistec.Web.Security
         {
 
         }
-  
+
         #endregion
 
-        //public static NameValueArgs GetUserDataEx(int AccountId, int UserId)
-        //{
-        //    NameValueArgs userdata = null;
-        //    using (UserDataContext context = new UserDataContext())
-        //    {
-        //        userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId);
-        //    }
-
-        //    return userdata;// == null ? null : userdata.ToJson();
-        //}
-
-        public static Dictionary<string,string> GetUserDataEx(int AccountId, int UserId)
+        public static NameValueArgs GetUserDataEx(int AccountId, int UserId)
         {
-            Dictionary<string, string> userdata = null;
+            NameValueArgs userdata = null;
             using (UserDataContext context = new UserDataContext())
             {
-                userdata = context.EntityDb.QuerySingle<Dictionary<string, string>>("AccountId", AccountId, "UserId", UserId);
-            }
-
-            return userdata;// == null ? null : userdata.ToJson();
-        }
-
-        public static IDictionary<string, string> GetUserDataKeyValue(int AccountId, int UserId)
-        {
-            IDictionary<string, string> userdata = null;
-            using (UserDataContext context = new UserDataContext())
-            {
-                userdata = context.EntityDb.QueryDictionary<string>("Key","Value","AccountId", AccountId, "UserId", UserId);
+                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId);
             }
 
             return userdata;// == null ? null : userdata.ToJson();
@@ -219,7 +164,7 @@ namespace Nistec.Web.Security
         public UserEvaluation Evaluation { get; set; }
         [EntityProperty]
         public bool IsBlocked { get; set; }
-    
+
 
         [EntityProperty(EntityPropertyType.View)]
         public DateTime Creation { get; set; }
@@ -232,7 +177,7 @@ namespace Nistec.Web.Security
         public int ParentId { get; set; }
         [EntityProperty]
         public bool IsVirtual { get; set; }
-       
+
     }
 
     public class UserProfile : UserItem, IUserProfile
@@ -242,7 +187,8 @@ namespace Nistec.Web.Security
         public const string DataSplitter = "-";
         public const string DataSplitEscape = "%";
 
-        public UserProfile Copy() {
+        public UserProfile Copy()
+        {
             return (UserProfile)this.MemberwiseClone();
         }
 
@@ -305,7 +251,7 @@ namespace Nistec.Web.Security
             return user;
         }
 
-       
+
         public static string LookupUserName(int UserId)
         {
             if (UserId <= 0)
@@ -349,7 +295,7 @@ namespace Nistec.Web.Security
                 using (UserProfileContext context = new UserProfileContext())
                 {
                     context.Set(this);
-                    res= context.SaveChanges(newItem, UpdateCommandType.Update);
+                    res = context.SaveChanges(newItem, UpdateCommandType.Update);
                     return UserResult.IsUpdated(res);
                 }
             }
@@ -417,7 +363,7 @@ namespace Nistec.Web.Security
         //public int Register(UserProfile newItem)
         //{
         //    int res = Authorizer.Instance.EntityDb.Db.SetEntity<UserProfile>(MappingName, this, newItem, UpdateCommandType.Insert);
-            
+
         //    return res;
         //}
 
@@ -468,8 +414,8 @@ namespace Nistec.Web.Security
         {
             get { return UserRole == 9; }
         }
-        
-        
+
+
 
         //public static UserProfile Get(string userData)
         //{
@@ -484,18 +430,19 @@ namespace Nistec.Web.Security
     {
         //[EntityProperty]
         //int State { get; set; }
-        UserDataVersion Version { get; set; }
-        PermsValue DefaultRule { get;}
-            
+        UserDataVersion UserDataVersion { get; set; }
+        PermsValue DefaultRule { get; }
+
         int EvaluationDays { get; set; }
         string HostClient { get; set; }
         string AppName { get; set; }
 
         int State { get; set; }
         bool IsAuthenticated { get; }
-        //[EntityProperty]
-        //bool IsAdmin { get; }
-
+        [EntityProperty]
+        bool IsAdmin { get; }
+        [EntityProperty(EntityPropertyType.NA)]
+        int ExType { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         int AccountCategory { get; set; }
         [EntityProperty(EntityPropertyType.View)]
@@ -504,23 +451,18 @@ namespace Nistec.Web.Security
         int AccType { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         string AccAccess { get; set; }
-
-        //[EntityProperty(EntityPropertyType.NA)]
-        //NameValueArgs Claims { get; set; }
-        //[EntityProperty(EntityPropertyType.NA)]
-        //NameValueArgs Data { get; set; }
-
+        [EntityProperty(EntityPropertyType.View)]
+        string ClaimsJson { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
-        Dictionary<string,string> Claims { get; set; }
+        NameValueArgs Claims { get; set; }
         [EntityProperty(EntityPropertyType.NA)]
-        Dictionary<string, string> Data { get; set; }
-
+        NameValueArgs Data { get; set; }
+        [EntityProperty(EntityPropertyType.View)]
+        string Cv { get; set; }
         void SetUserDataEx(UserDataVersion version);
-        //void SetUserClaims(UserDataVersion version);
+
         string UserData(UserDataVersion version);
 
-        [EntityProperty(EntityPropertyType.View)]
-        string Token { get; set; }
         //string UserData();
 
         //bool IsAuthenticated { get; }
@@ -576,7 +518,7 @@ namespace Nistec.Web.Security
 
         #endregion
 
-        
+
 
     }
 }
