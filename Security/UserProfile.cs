@@ -172,9 +172,10 @@ namespace Nistec.Web.Security
         public DateTime Modified { get; set; }
         [EntityProperty]
         public string Profession { get; set; }
-
         [EntityProperty]
-        public int ParentId { get; set; }
+        public int AccessId { get; set; }
+        //[EntityProperty]
+        //public int ParentId { get; set; }
         [EntityProperty]
         public bool IsVirtual { get; set; }
 
@@ -449,16 +450,16 @@ namespace Nistec.Web.Security
         string AccountName { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         int AccType { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        string AccAccess { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        string ClaimsJson { get; set; }
-        [EntityProperty(EntityPropertyType.NA)]
-        NameValueArgs Claims { get; set; }
-        [EntityProperty(EntityPropertyType.NA)]
+        //[EntityProperty(EntityPropertyType.View)]
+        //string AccAccess { get; set; }
+        //[EntityProperty(EntityPropertyType.View)]
+        //string ClaimsJson { get; set; }
+        //[EntityProperty(EntityPropertyType.NA)]
+        //NameValueArgs Claims { get; set; }
+        //[EntityProperty(EntityPropertyType.NA)]
         NameValueArgs Data { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        string Cv { get; set; }
+        //[EntityProperty(EntityPropertyType.View)]
+        //string Cv { get; set; }
         void SetUserDataEx(UserDataVersion version);
 
         string UserData(UserDataVersion version);
@@ -510,7 +511,7 @@ namespace Nistec.Web.Security
         //string Lang { get; set; }
 
         [EntityProperty]
-        int ParentId { get; set; }
+        int AccessId { get; set; }
         //[EntityProperty]
         //int Profession { get; set; }
         [EntityProperty]

@@ -118,25 +118,25 @@ namespace Nistec.Web.Security
             return user;
         }
 
-        public static string GetJson(HttpContextBase context)
-        {
-            if (context == null || !context.Request.IsAuthenticated || !(context.User.Identity is FormsIdentity))
-            {
-                return JsonSerializer.ConvertToJson(new object[] { "state", AuthState.UnAuthorized, "desc", "Http error: Invalid HttpContext" }, null);
-            }
-            string userData = null;
-            var formsIdentity = (FormsIdentity)context.User.Identity;
-            if (formsIdentity != null)
-            {
-                userData = formsIdentity.Ticket.UserData;
-            }
-            if (userData == null)
-            {
-                return JsonSerializer.ConvertToJson(new object[] { "state", AuthState.UnAuthorized, "desc", "FormsIdentity error: Invalid User Data" }, null);
-            }
+        //public static string GetJson(HttpContextBase context)
+        //{
+        //    if (context == null || !context.Request.IsAuthenticated || !(context.User.Identity is FormsIdentity))
+        //    {
+        //        return JsonSerializer.ConvertToJson(new object[] { "state", AuthState.UnAuthorized, "desc", "Http error: Invalid HttpContext" }, null);
+        //    }
+        //    string userData = null;
+        //    var formsIdentity = (FormsIdentity)context.User.Identity;
+        //    if (formsIdentity != null)
+        //    {
+        //        userData = formsIdentity.Ticket.UserData;
+        //    }
+        //    if (userData == null)
+        //    {
+        //        return JsonSerializer.ConvertToJson(new object[] { "state", AuthState.UnAuthorized, "desc", "FormsIdentity error: Invalid User Data" }, null);
+        //    }
 
-            return SignedUser.UserDataToJson(userData);
-        }
+        //    return SignedUser.UserDataToJson(userData);
+        //}
 
         internal static SignedUser NotAuthrized(AuthState state, string desc)
         {
@@ -196,7 +196,7 @@ namespace Nistec.Web.Security
                 //use SignedUser.ParseData(userData);
                 return false;
             }
-            else if (version == UserDataVersion.DataJson)
+            else //if (version == UserDataVersion.DataJson)
             {
                 Data = NameValueArgs.ParseJson(userData);
                 if (Data == null || Data.Count == 0)
@@ -209,60 +209,66 @@ namespace Nistec.Web.Security
                 AccountCategory = Data.Get<int>("AccountCategory");
                 AccountName = Data["AccountName"];
                 DisplayName = Data["DisplayName"];
-                ParentId = Data.Get<int>("ParentId");
+
+                int accessId = 0;
+                if (Data.TryGetValue("AccessId", out accessId))
+                    AccessId = accessId;
+                else if (Data.TryGetValue("ParentId", out accessId))
+                    AccessId = accessId;
+
                 AccType = Data.Get<int>("AccType");
-                AccAccess = Data["AccAccess"];
-                ClaimsJson = Data["ClaimsJson"];
+                //AccAccess = Data["AccAccess"];
+                //ClaimsJson = Data["ClaimsJson"];
                 ExType = Data.Get<int>("ExType");
-                Cv = Data["Cv"];
+                //Cv = Data["Cv"];
                 return true;
             }
-            else
-            {
+            //else
+            //{
 
-                //int applicationId = 0;
-                int accountId = 0;
-                int userId = 0;
-                int userRole = 0;
-                int accountCategory = 0;
-                string lang = "he";
-                string accountName = null;
-                string displayName = null;
-                int parentId = 0;
-                string dataConfig = null;
+            //    //int applicationId = 0;
+            //    int accountId = 0;
+            //    int userId = 0;
+            //    int userRole = 0;
+            //    int accountCategory = 0;
+            //    string lang = "he";
+            //    string accountName = null;
+            //    string displayName = null;
+            //    int accessId = 0;
+            //    string dataConfig = null;
 
-                if (GenericArgs.SplitArgs<int, int, int, string, string, int, string, int, string>(userData, DataSplitterCh, ref accountId, ref userId, ref userRole, ref lang, ref accountName, ref accountCategory, ref displayName, ref parentId, ref dataConfig))
-                {
-                    UserId = userId;
-                    AccountId = accountId;
-                    UserRole = userRole;
-                    Lang = lang;
-                    AccountCategory = 0;
-                    AccountName = BaseConverter.UnEscape(accountName, DataSplitter, DataSplitEscape);
-                    DisplayName = BaseConverter.UnEscape(displayName, DataSplitter, DataSplitEscape);
-                    ParentId = parentId;
-                    var args = BaseConverter.UnEscape(dataConfig, DataSplitter, DataSplitEscape);
-                    if (!string.IsNullOrEmpty(args))
-                    {
-                        var array = args.Split('|');
-                        Data = NameValueArgs.Get(array);
-                        //Data = NameValueArgs.Create(args);// GenericRecord.Parse(BaseConverter.UnEscape(dataConfig, "-", "%"));
-                    }
-                    return true;
-                }
-                //if (GenericArgs.SplitArgs<int, int, int, int, int, string, string>(userData, '-', ref applicationId, ref accountId, ref userId, ref userRole, ref ownerId, ref lang, ref perms))
-                //{
-                //    UserId = userId;
-                //    AccountId = accountId;
-                //    UserRole = userRole;
-                //    ApplicationId = applicationId;
-                //    OwnerId = ownerId;
-                //    Lang = lang;
-                //    Perms = perms;
-                //    return true;
-                //}
-                return false;
-            }
+            //    if (GenericArgs.SplitArgs<int, int, int, string, string, int, string, int, string>(userData, DataSplitterCh, ref accountId, ref userId, ref userRole, ref lang, ref accountName, ref accountCategory, ref displayName, ref parentId, ref dataConfig))
+            //    {
+            //        UserId = userId;
+            //        AccountId = accountId;
+            //        UserRole = userRole;
+            //        Lang = lang;
+            //        AccountCategory = 0;
+            //        AccountName = BaseConverter.UnEscape(accountName, DataSplitter, DataSplitEscape);
+            //        DisplayName = BaseConverter.UnEscape(displayName, DataSplitter, DataSplitEscape);
+            //        AccessId = accessId;
+            //        var args = BaseConverter.UnEscape(dataConfig, DataSplitter, DataSplitEscape);
+            //        if (!string.IsNullOrEmpty(args))
+            //        {
+            //            var array = args.Split('|');
+            //            Data = NameValueArgs.Get(array);
+            //            //Data = NameValueArgs.Create(args);// GenericRecord.Parse(BaseConverter.UnEscape(dataConfig, "-", "%"));
+            //        }
+            //        return true;
+            //    }
+            //    //if (GenericArgs.SplitArgs<int, int, int, int, int, string, string>(userData, '-', ref applicationId, ref accountId, ref userId, ref userRole, ref ownerId, ref lang, ref perms))
+            //    //{
+            //    //    UserId = userId;
+            //    //    AccountId = accountId;
+            //    //    UserRole = userRole;
+            //    //    ApplicationId = applicationId;
+            //    //    OwnerId = ownerId;
+            //    //    Lang = lang;
+            //    //    Perms = perms;
+            //    //    return true;
+            //    //}
+            //    return false;
+            //}
 
         }
 
@@ -291,12 +297,12 @@ namespace Nistec.Web.Security
         public string AccountName { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         public int AccType { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        public string AccAccess { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        public string ClaimsJson { get; set; }
-        [EntityProperty(EntityPropertyType.View)]
-        public string Cv { get; set; }
+        //[EntityProperty(EntityPropertyType.View)]
+        //public string AccAccess { get; set; }
+        //[EntityProperty(EntityPropertyType.View)]
+        //public string ClaimsJson { get; set; }
+        //[EntityProperty(EntityPropertyType.View)]
+        //public string Cv { get; set; }
 
 
         #endregion
@@ -355,46 +361,46 @@ namespace Nistec.Web.Security
 
         [EntityProperty(EntityPropertyType.NA)]
         public string DataJson { get; set; }
-        public string UserDataJson()
-        {
-            string genericData = Data == null ? "" : Data.ToJson();
-            object[] args = new object[] { "acid", AccountId, "uid", UserId, "role", UserRole, "lang", Lang, "acname", AccountName, "category", AccountCategory, "uname", DisplayName, "pid", ParentId, "data", genericData };
-            return JsonSerializer.ConvertToJson(args, null);
+        //public string UserDataJson()
+        //{
+        //    string genericData = Data == null ? "" : Data.ToJson();
+        //    object[] args = new object[] { "acid", AccountId, "uid", UserId, "role", UserRole, "lang", Lang, "acname", AccountName, "category", AccountCategory, "uname", DisplayName, "pid", ParentId, "data", genericData };
+        //    return JsonSerializer.ConvertToJson(args, null);
 
-            //return ""+ string.Format("aid:{0},uid:{1},role:{2},lang:{3},aname:{4},category:{5},uname{6},pid:{7},data:{8}", AccountId, UserId, UserRole, Lang, AccountName, AccountCategory, DisplayName, ParentId, genericData)+""+ DataJson;
-        }
-        public static string UserDataToJson(string userData)
-        {
-            string[] data = userData.Split(DataSplitterCh);
-            string genericData = "";
-            string dataargs = data[8];
-            if (!string.IsNullOrEmpty(dataargs))
-            {
-                dataargs = BaseConverter.UnEscape(dataargs, DataSplitter, DataSplitEscape);
-                genericData = JsonSerializer.ConvertToJson(dataargs.Split('|'), null);
-            }
+        //    //return ""+ string.Format("aid:{0},uid:{1},role:{2},lang:{3},aname:{4},category:{5},uname{6},pid:{7},data:{8}", AccountId, UserId, UserRole, Lang, AccountName, AccountCategory, DisplayName, ParentId, genericData)+""+ DataJson;
+        //}
+        //public static string UserDataToJson(string userData)
+        //{
+        //    string[] data = userData.Split(DataSplitterCh);
+        //    string genericData = "";
+        //    string dataargs = data[8];
+        //    if (!string.IsNullOrEmpty(dataargs))
+        //    {
+        //        dataargs = BaseConverter.UnEscape(dataargs, DataSplitter, DataSplitEscape);
+        //        genericData = JsonSerializer.ConvertToJson(dataargs.Split('|'), null);
+        //    }
 
-            data[4] = BaseConverter.UnEscape(data[4], DataSplitter, DataSplitEscape);
-            data[6] = BaseConverter.UnEscape(data[6], DataSplitter, DataSplitEscape);
+        //    data[4] = BaseConverter.UnEscape(data[4], DataSplitter, DataSplitEscape);
+        //    data[6] = BaseConverter.UnEscape(data[6], DataSplitter, DataSplitEscape);
 
-            object[] args = new object[] { "acid", data[0], "uid", data[1], "role", data[2], "lang", data[3], "acname", data[4], "category", data[5], "uname", data[6], "pid", data[7], "data", genericData };
-            return JsonSerializer.ConvertToJson(args, null);
-        }
+        //    object[] args = new object[] { "acid", data[0], "uid", data[1], "role", data[2], "lang", data[3], "acname", data[4], "category", data[5], "uname", data[6], "pid", data[7], "data", genericData };
+        //    return JsonSerializer.ConvertToJson(args, null);
+        //}
         #endregion
 
-        [EntityProperty(EntityPropertyType.NA)]
-        public NameValueArgs Claims { get; set; }
-        public string ClaimsSerilaize()
-        {
-            string genericData = (Claims != null) ? Claims.ToKeyValuePipe() : null;
-            return genericData;
-        }
-        public NameValueArgs ClaimsDeserilaize(string data)
-        {
-            string[] args = data.SplitTrim('|');
-            NameValueArgs claims = new NameValueArgs(args);
-            return claims;
-        }
+        //[EntityProperty(EntityPropertyType.NA)]
+        //public NameValueArgs Claims { get; set; }
+        //public string ClaimsSerilaize()
+        //{
+        //    string genericData = (Claims != null) ? Claims.ToKeyValuePipe() : null;
+        //    return genericData;
+        //}
+        //public NameValueArgs ClaimsDeserilaize(string data)
+        //{
+        //    string[] args = data.SplitTrim('|');
+        //    NameValueArgs claims = new NameValueArgs(args);
+        //    return claims;
+        //}
 
         public void SetUserDataEx(UserDataVersion version)
         {
@@ -434,27 +440,27 @@ namespace Nistec.Web.Security
             {
                 return JsonSerializer.Serialize(this);
             }
-            else if (version == UserDataVersion.DataJson)
+            else //if (version == UserDataVersion.DataJson)
             {
                 return (Data != null) ? Data.ToJson() : null;
             }
-            else //DataPipe
-            {
-                string genericData = (Data != null) ? Data.ToKeyValuePipe() : null;
+            //else //DataPipe
+            //{
+            //    string genericData = (Data != null) ? Data.ToKeyValuePipe() : null;
 
-                return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", AccountId, UserId, UserRole, Lang, BaseConverter.Escape(AccountName, UserProfile.DataSplitter, DataSplitEscape), AccountCategory, BaseConverter.Escape(DisplayName, DataSplitter, DataSplitEscape), ParentId, BaseConverter.Escape(genericData, DataSplitter, DataSplitEscape));
-            }
+            //    return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", AccountId, UserId, UserRole, Lang, BaseConverter.Escape(AccountName, UserProfile.DataSplitter, DataSplitEscape), AccountCategory, BaseConverter.Escape(DisplayName, DataSplitter, DataSplitEscape), ParentId, BaseConverter.Escape(genericData, DataSplitter, DataSplitEscape));
+            //}
         }
 
         //use UserData(UserDataVersion version)
-        public string UserData()
-        {
+        //public string UserData()
+        //{
 
-            string genericData = (Data != null) ? Data.ToKeyValuePipe() : null;
+        //    string genericData = (Data != null) ? Data.ToKeyValuePipe() : null;
 
-            return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", AccountId, UserId, UserRole, Lang, BaseConverter.Escape(AccountName, UserProfile.DataSplitter, DataSplitEscape), AccountCategory, BaseConverter.Escape(DisplayName, DataSplitter, DataSplitEscape), ParentId, BaseConverter.Escape(genericData, DataSplitter, DataSplitEscape));
+        //    return string.Format("{0}-{1}-{2}-{3}-{4}-{5}-{6}-{7}-{8}", AccountId, UserId, UserRole, Lang, BaseConverter.Escape(AccountName, UserProfile.DataSplitter, DataSplitEscape), AccountCategory, BaseConverter.Escape(DisplayName, DataSplitter, DataSplitEscape), ParentId, BaseConverter.Escape(genericData, DataSplitter, DataSplitEscape));
 
-        }
+        //}
     }
 
 }

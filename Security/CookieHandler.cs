@@ -98,6 +98,144 @@ namespace Nistec.Web.Security
             return cookievalues;
         }
 
+        public static HttpCookie UpsertCookieValues(string name, IDictionary<string, object> keyValueDictionary, int addMinutes, string cookieDomain = "host", bool encrypt = true, bool httpOnly = true)
+        {
+
+            var context = HttpContext.Current;
+
+            HttpCookie cookie = Create(context, name);
+
+            if (keyValueDictionary == null)
+                cookie.Value = null;
+            else
+                foreach (var kvp in keyValueDictionary)
+                {
+                    string val = kvp.Value == null ? "" : kvp.Value.ToString();
+                    if (encrypt)
+                        cookie.Values.Set(kvp.Key, Encode(val));
+                    else
+                        cookie.Values.Set(kvp.Key, val);
+                }
+
+            return UpsertComplete(cookie, context, addMinutes, cookieDomain, httpOnly);
+        }
+
+        public static HttpCookie UpsertCookieValues(string name, string[] keyValueArgs, int addMinutes, string cookieDomain = "host", bool encrypt = true, bool httpOnly = true)
+        {
+
+            var context = HttpContext.Current;
+
+            HttpCookie cookie = Create(context, name);
+
+            if (keyValueArgs == null)
+                cookie.Value = null;
+            else
+            {
+                int count = keyValueArgs.Length;
+                if (count % 2 != 0)
+                {
+                    throw new ArgumentException("values parameter not correct, Not match key value arguments");
+                }
+                for (int i = 0; i < count; i++)
+                {
+                    string key = keyValueArgs[i].ToString();
+                    string value = keyValueArgs[++i];
+                    if (encrypt)
+                        cookie.Values.Set(key, Encode(value));
+                    else
+                        cookie.Values.Set(key, value);
+                }
+            }
+
+            return UpsertComplete(cookie, context, addMinutes, cookieDomain, httpOnly);
+        }
+
+        public static HttpCookie UpsertCookieValues(string name, string key, string value, int addMinutes, string cookieDomain = "host", bool encrypt = true, bool httpOnly = true)
+        {
+
+            var context = HttpContext.Current;
+
+            HttpCookie cookie = Create(context, name);
+
+            if (encrypt)
+                cookie.Values.Set(key, Encode(value));
+            else
+                cookie.Values.Set(key, value);
+
+            return UpsertComplete(cookie, context, addMinutes, cookieDomain, httpOnly);
+        }
+
+        public static HttpCookie UpsertCookieValues(string name, string value, int addMinutes, string cookieDomain = "host", bool encrypt = true, bool httpOnly = true)
+        {
+
+            var context = HttpContext.Current;
+
+            HttpCookie cookie = Create(context, name);
+
+            if (encrypt)
+                cookie.Value= Encode(value);
+            else
+                cookie.Value=value;
+
+            return UpsertComplete(cookie, context,  addMinutes,  cookieDomain , httpOnly);
+           
+        }
+
+        static HttpCookie Create(HttpContext context, string name)
+        {
+            //var context = HttpContext.Current;
+
+            // NOTE: we have to look first in the response, and then in the request.
+            // This is required when we update multiple keys inside the cookie.
+            HttpCookie cookie = context.Response.Cookies[name]
+                ?? context.Request.Cookies[name];
+
+            if (cookie == null)
+            {
+                cookie = new HttpCookie(name);
+
+                if (context.Request.IsSecureConnection)
+                    cookie.Secure = true;
+            }
+            return cookie;
+        }
+
+        static HttpCookie UpsertComplete(HttpCookie cookie, HttpContext context, int addMinutes, string cookieDomain = "host",  bool httpOnly = true) {
+
+            cookie.Expires = DateTime.Now.AddMinutes(addMinutes);
+            if (!String.IsNullOrEmpty(cookieDomain))
+            {
+                if (cookieDomain == "host")
+                {
+                    if (!context.Request.IsLocal)
+                        cookie.Domain = context.Request.Url.Host;
+                }
+                else{
+                    cookie.Domain = cookieDomain;
+                }
+            }
+            if (httpOnly) cookie.HttpOnly = true;
+            context.Response.Cookies.Add(cookie);
+            return cookie;
+        }
+
+        public static string GetCookieValue(string cookieName, string keyName=null, bool encrypt = true)
+        {
+            HttpCookie cookie = HttpContext.Current.Request.Cookies[cookieName];
+            if (cookie != null)
+            {
+                string val = (!String.IsNullOrEmpty(keyName)) ? cookie[keyName] : cookie.Value;
+                if (!String.IsNullOrEmpty(val))
+                {
+                    string value = Uri.UnescapeDataString(val);
+                    if (encrypt)
+                        return Decode(value);
+                    return value;
+                }
+            }
+            return null;
+        }
+
         public static string RemoveCookieValue(HttpContextBase context, string name)
         {
             string cookievalue = null;
