@@ -37,8 +37,10 @@ namespace Nistec.Web.Security
         //UserNotRemoved = 6,//user not removed
         PasswordShouldChange = 7,//UserUpdated = 7,//not used
         PasswordManyFailures = 8,// UserNotUpdated = 8,//not used
+        ActionNotAllowed = 9,//Action not allowed
         Succeeded = 10//--10=ok
     }
+
 
     public enum UserUpdateState
     {
