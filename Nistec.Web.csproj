@@ -74,6 +74,9 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http">
+      <HintPath>..\References\_Dll\System.Net.Http.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
@@ -95,6 +98,7 @@
     <Compile Include="Cms\CmsItems.cs" />
     <Compile Include="Cms\CmsConfig.cs" />
     <Compile Include="Common\BrowserHelper.cs" />
+    <Compile Include="Common\Class1.cs" />
     <Compile Include="Common\CommandArgs.cs" />
     <Compile Include="Common\CommonHelper.cs" />
     <Compile Include="Asp\ExportUtil.cs" />
