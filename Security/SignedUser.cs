@@ -187,7 +187,7 @@ namespace Nistec.Web.Security
             Decode(identity.Ticket.UserData, version);
         }
 
-        bool Decode(string userData, UserDataVersion version)
+        bool Decode(string userData, UserDataVersion version)//, HttpContextBase context)
         {
             //version=Serialize|DataJson|DataPipe
 
@@ -209,7 +209,9 @@ namespace Nistec.Web.Security
                 AccountCategory = Data.Get<int>("AccountCategory");
                 AccountName = Data["AccountName"];
                 DisplayName = Data["DisplayName"];
-
+                Phone = Data["Phone"];
+                Email = Data["Email"];
+                //HostClient = context.Request.UserHostAddress;
                 int accessId = 0;
                 if (Data.TryGetValue("AccessId", out accessId))
                     AccessId = accessId;
