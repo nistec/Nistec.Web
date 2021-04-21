@@ -88,22 +88,22 @@ namespace Nistec.Web.Security
 
         #endregion
 
-        public static NameValueArgs GetUserDataEx(int AccountId, int UserId)
+        public static NameValueArgs GetUserDataEx(int AccountId, int UserId, string AppName, string ClientIP)
         {
             NameValueArgs userdata = null;
             using (UserDataContext context = new UserDataContext())
             {
-                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId);
+                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP);
             }
 
             return userdata;// == null ? null : userdata.ToJson();
         }
 
-        public static string GetUserDataJson(int AccountId, int UserId)
+        public static string GetUserDataJson(int AccountId, int UserId, string AppName, string ClientIP)
         {
             using (UserDataContext context = new UserDataContext())
             {
-                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId);
+                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP);
             }
         }
 
@@ -437,7 +437,6 @@ namespace Nistec.Web.Security
         int EvaluationDays { get; set; }
         string HostClient { get; set; }
         string AppName { get; set; }
-
         int State { get; set; }
         bool IsAuthenticated { get; }
         [EntityProperty]
@@ -460,7 +459,7 @@ namespace Nistec.Web.Security
         NameValueArgs Data { get; set; }
         //[EntityProperty(EntityPropertyType.View)]
         //string Cv { get; set; }
-        void SetUserDataEx(UserDataVersion version);
+        void SetUserDataEx(UserDataVersion version, string AppName, string ClientIP);
 
         string UserData(UserDataVersion version);
 

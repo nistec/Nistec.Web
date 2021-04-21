@@ -35,6 +35,7 @@ namespace Nistec.Web.Security
         NonConfirmed = 4,//--4=non confirmed, username or password exists
         //UserRemoved = 5,//user removed
         //UserNotRemoved = 6,//user not removed
+        ShouldOtp = 5,
         PasswordShouldChange = 7,//UserUpdated = 7,//not used
         PasswordManyFailures = 8,// UserNotUpdated = 8,//not used
         ActionNotAllowed = 9,//Action not allowed

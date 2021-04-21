@@ -211,6 +211,8 @@ namespace Nistec.Web.Security
                 DisplayName = Data["DisplayName"];
                 Phone = Data["Phone"];
                 Email = Data["Email"];
+                //IsConfirmed = Data["IsConfirmed"];
+                State = Data.Get<int>("State");
                 //HostClient = context.Request.UserHostAddress;
                 int accessId = 0;
                 if (Data.TryGetValue("AccessId", out accessId))
@@ -277,6 +279,9 @@ namespace Nistec.Web.Security
         #region Properties
         [EntityProperty]
         public UserDataVersion UserDataVersion { get; set; }
+        //[EntityProperty]
+        //public int AuthState { get; set; }
+        
 
         [EntityProperty]
         public int State { get; set; }
@@ -306,6 +311,11 @@ namespace Nistec.Web.Security
         //[EntityProperty(EntityPropertyType.View)]
         //public string Cv { get; set; }
 
+        public void ChangeAuthState(int state) {
+
+            Data["State"] = state.ToString();
+            State = state;
+        }
 
         #endregion
 
@@ -356,9 +366,9 @@ namespace Nistec.Web.Security
 
         #region User Data Json
 
-        public void SetUserDataJson()
+        public void SetUserDataJson(string AppName, string ClientIP)
         {
-            DataJson = UserDataContext.GetUserDataJson(AccountId, UserId);
+            DataJson = UserDataContext.GetUserDataJson(AccountId, UserId, AppName, ClientIP);
         }
 
         [EntityProperty(EntityPropertyType.NA)]
@@ -404,11 +414,11 @@ namespace Nistec.Web.Security
         //    return claims;
         //}
 
-        public void SetUserDataEx(UserDataVersion version)
+        public void SetUserDataEx(UserDataVersion version, string AppName, string ClientIP)
         {
             if (version == UserDataVersion.DataJson || version == UserDataVersion.DataPipe)
             {
-                Data = UserDataContext.GetUserDataEx(AccountId, UserId);
+                Data = UserDataContext.GetUserDataEx(AccountId, UserId, AppName, ClientIP);
             }
 
         }

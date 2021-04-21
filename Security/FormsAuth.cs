@@ -139,7 +139,7 @@ namespace Nistec.Web.Security
                     Log.Error("User not Authenticated");
                     return AuthState.UnAuthorized;
                 }
-                user.SetUserDataEx(version);
+                user.SetUserDataEx(version,AppName,HostClient);
                 SignIn(user, createPersistentCookie);
                 return (AuthState)user.State;//. IsAuthenticated;
             }
@@ -166,7 +166,7 @@ namespace Nistec.Web.Security
                     throw new SecurityException(AuthState.UnAuthorized, "User not Authenticated");
                 }
                 //user.Data = UserDataContext.GetUserDataEx(user.AccountId,user.UserId);
-                user.SetUserDataEx(version);
+                user.SetUserDataEx(version,AppName,HostClient);
                 SignIn(user, createPersistentCookie);
                 return user;// (AuthState)user.State;//. IsAuthenticated;
             }

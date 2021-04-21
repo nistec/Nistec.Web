@@ -236,6 +236,8 @@ namespace Nistec.Web.Security
             return null;
         }
 
+        
+
         public static string RemoveCookieValue(HttpContextBase context, string name)
         {
             string cookievalue = null;
@@ -258,30 +260,102 @@ namespace Nistec.Web.Security
                 ? cookies[cookieName] != null
                 : cookies[cookieName] != null && cookies[cookieName][keyName] != null;
         }
+
+        //public static void Logoff(Page p, string SiteName)
+        //{
+        //    if (p.Request.Browser.Cookies)
+        //    {
+        //        //HttpCookie cookies = p.Request.Cookies[SiteName];
+        //        ////ok = VerifyLogin(Request.Cookies[SiteName]);
+        //        //if (cookies == null || cookies.Values.Count == 0)
+        //        //    return;
+        //        //cookies.Expires = DateTime.Now.AddDays(-1);
+        //        //p.Response.Cookies.Remove(SiteName);
+
+        //        if (p.Request.Cookies[SiteName] != null)
+        //        {
+        //            HttpCookie cookies = new HttpCookie(SiteName);
+        //            cookies.Expires = DateTime.Now.AddDays(-1d);
+        //            p.Response.Cookies.Add(cookies);
+        //        }
+        //    }
+        //}
+
         /// <summary>
         /// Removes a single value from a cookie or the whole cookie (if keyName is null)
         /// </summary>
-        public static void RemoveCookie(string cookieName, string keyName, string domain = null)
+        /// <param name="cookieName">Cookie name to remove (or to remove a KeyValue in)</param>
+        /// <param name="keyName">the name of the key value to remove. If NULL or EMPTY, the whole cookie will be removed.</param>
+        /// <param name="domain">cookie domain (required if you need to delete a .domain.it type of cookie)</param>
+        public static void RemoveCookie(string cookieName, string keyName, string domain=null)
         {
-            if (String.IsNullOrEmpty(keyName))
+            if (HttpContext.Current.Request.Cookies[cookieName] != null)
             {
-                if (HttpContext.Current.Request.Cookies[cookieName] != null)
+                var httpContext = new HttpContextWrapper(HttpContext.Current);
+                var _response = httpContext.Response;
+
+                HttpCookie cookie = new HttpCookie(cookieName)
                 {
-                    HttpCookie cookie = HttpContext.Current.Request.Cookies[cookieName];
-                    cookie.Expires = DateTime.UtcNow.AddYears(-1);
-                    if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
-                    HttpContext.Current.Response.Cookies.Add(cookie);
-                    HttpContext.Current.Request.Cookies.Remove(cookieName);
-                }
+                    Expires = DateTime.Now.AddDays(-1) // or any other time in the past
+                };
+                if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
+                _response.Cookies.Set(cookie);
+
+                HttpContext.Current.Request.Cookies.Remove(cookieName);
             }
-            else
+
+            /*
+            if (HttpContext.Current.Request.Cookies[cookieName] != null)
             {
                 HttpCookie cookie = HttpContext.Current.Request.Cookies[cookieName];
-                cookie.Values.Remove(keyName);
-                if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
-                HttpContext.Current.Response.Cookies.Add(cookie);
+
+                // SameSite.None Cookies won't be accepted by Google Chrome and other modern browsers if they're not secure, which would lead in a "non-deletion" bug.
+                // in this specific scenario, we need to avoid emitting the SameSite attribute to ensure that the cookie will be deleted.
+                //if (cookie.SameSite == SameSiteMode.None && !cookie.Secure)
+                //    cookie.SameSite = (SameSiteMode)(-1);
+
+                if (String.IsNullOrEmpty(keyName))
+                {
+                    cookie.Expires = DateTime.UtcNow.AddYears(-1);
+                    if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
+                    HttpContext.Current.Response.Cookies.Set(cookie);
+                    HttpContext.Current.Request.Cookies.Remove(cookieName);
+                }
+                else
+                {
+                    cookie.Values.Remove(keyName);
+                    if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
+                    HttpContext.Current.Response.Cookies.Set(cookie);
+                }
             }
+            */
         }
+
+        ///// <summary>
+        ///// Removes a single value from a cookie or the whole cookie (if keyName is null)
+        ///// </summary>
+        //public static void RemoveCookie(string cookieName, string keyName, string domain = null)
+        //{
+        //    if (String.IsNullOrEmpty(keyName))
+        //    {
+        //        if (HttpContext.Current.Request.Cookies[cookieName] != null)
+        //        {
+        //            HttpCookie cookie = HttpContext.Current.Request.Cookies[cookieName];
+        //            cookie.Expires = DateTime.UtcNow.AddYears(-1);
+        //            if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
+        //            HttpContext.Current.Response.Cookies.Add(cookie);
+        //            HttpContext.Current.Request.Cookies.Remove(cookieName);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        HttpCookie cookie = HttpContext.Current.Request.Cookies[cookieName];
+        //        cookie.Values.Remove(keyName);
+        //        if (!String.IsNullOrEmpty(domain)) cookie.Domain = domain;
+        //        HttpContext.Current.Response.Cookies.Add(cookie);
+        //    }
+        //}
+
         /// <summary>
         /// Retrieves a single value from Request.Cookies
         /// </summary>

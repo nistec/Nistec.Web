@@ -98,7 +98,7 @@
     <Compile Include="Cms\CmsItems.cs" />
     <Compile Include="Cms\CmsConfig.cs" />
     <Compile Include="Common\BrowserHelper.cs" />
-    <Compile Include="Common\Class1.cs" />
+    <Compile Include="Common\HttpRequestMessageExtensions.cs" />
     <Compile Include="Common\CommandArgs.cs" />
     <Compile Include="Common\CommonHelper.cs" />
     <Compile Include="Asp\ExportUtil.cs" />
