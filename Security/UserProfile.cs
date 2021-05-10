@@ -88,22 +88,22 @@ namespace Nistec.Web.Security
 
         #endregion
 
-        public static NameValueArgs GetUserDataEx(int AccountId, int UserId, string AppName, string ClientIP)
+        public static NameValueArgs GetUserDataEx(int AccountId, int UserId, string AppName, string ClientIP, int OtpId=0, string OtpCode=null)
         {
             NameValueArgs userdata = null;
             using (UserDataContext context = new UserDataContext())
             {
-                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP);
+                userdata = context.EntityDb.QuerySingle<NameValueArgs>("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP, "OtpId", OtpId, "OtpCode", OtpCode);
             }
 
             return userdata;// == null ? null : userdata.ToJson();
         }
 
-        public static string GetUserDataJson(int AccountId, int UserId, string AppName, string ClientIP)
+        public static string GetUserDataJson(int AccountId, int UserId, string AppName, string ClientIP, int OtpId = 0, string OtpCode = null)
         {
             using (UserDataContext context = new UserDataContext())
             {
-                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP);
+                return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP, "OtpId", OtpId, "OtpCode", OtpCode);
             }
         }
 
@@ -459,9 +459,9 @@ namespace Nistec.Web.Security
         NameValueArgs Data { get; set; }
         //[EntityProperty(EntityPropertyType.View)]
         //string Cv { get; set; }
-        void SetUserDataEx(UserDataVersion version, string AppName, string ClientIP);
+        //void SetUserDataEx(UserDataVersion version, string AppName, string ClientIP);
 
-        string UserData(UserDataVersion version);
+        //string UserData(UserDataVersion version);
 
         //string UserData();
 

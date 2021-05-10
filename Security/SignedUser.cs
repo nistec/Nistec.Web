@@ -28,6 +28,29 @@ namespace Nistec.Web.Security
         //VeryStrong = 5
     }
 
+    public class SignedUserState
+    {
+        public int AccessId { get; set; }
+        public int UserId { get; set; }
+        public AuthState State { get; set; }
+        public string Token { get; set; }
+        public string Phone { get; set; }
+        public string UserName { get; set; }
+        public string UserData { get; set; }
+        //public int OtpId { get; set; }
+        //public string OtpCode { get; set; }
+
+        public static SignedUserState Parse(string data)
+        {
+            return JsonSerializer.Deserialize<SignedUserState>(data);
+        }
+        public string ToJson()
+        {
+            return JsonSerializer.Serialize(this);
+        }
+    }
+
+
     public class SignedUser : UserProfile, ISignedUser//, IUser
     {
         internal const string SessionKey = "SignedUser";
@@ -51,7 +74,7 @@ namespace Nistec.Web.Security
                 //Log.Fatal("User not Authenticated");
                 return NotAuthrized(AuthState.UnAuthorized, "Authenticatation error: User not Authenticated");
             }
-            signedUser.State = (int)AuthState.Succeeded;
+            //signedUser.State = (int)AuthState.Succeeded;
             signedUser.IsMobile = DeviceHelper.IsMobile(context.Request);
             //context.Session[SignedUser.SessionKey] = signedUser;
             return signedUser;
@@ -83,7 +106,7 @@ namespace Nistec.Web.Security
                 //Log.Fatal("User not Authenticated");
                 return NotAuthrized(AuthState.UnAuthorized, "Authenticatation error: Access is denied");
             }
-            signedUser.State = (int)AuthState.Succeeded;
+            //signedUser.State = (int)AuthState.Succeeded;
             signedUser.IsMobile = DeviceHelper.IsMobile(context.Request);
             //context.Session[SignedUser.SessionKey] = signedUser;
             return signedUser;
@@ -91,7 +114,8 @@ namespace Nistec.Web.Security
 
         internal static SignedUser Parse(FormsIdentity identity, UserDataVersion version)
         {
-            SignedUser user = null;
+            SignedUser user = null;// JsonSerializer.Deserialize<SignedUser>(identity.Ticket.UserData);//, new JsonSettings() { JsonDateFormat= JsonDateFormat.dynamic});
+
             if (version == UserDataVersion.Json)
             {
                 user = JsonSerializer.Deserialize<SignedUser>(identity.Ticket.UserData);
@@ -311,11 +335,11 @@ namespace Nistec.Web.Security
         //[EntityProperty(EntityPropertyType.View)]
         //public string Cv { get; set; }
 
-        public void ChangeAuthState(int state) {
+        //public void ChangeAuthState(int state) {
 
-            Data["State"] = state.ToString();
-            State = state;
-        }
+        //    Data["State"] = state.ToString();
+        //    State = state;
+        //}
 
         #endregion
 

@@ -150,7 +150,7 @@ namespace Nistec.Web.Security
             }
         }
 
-        public ISignedUser SignInUser<T>(string loginName, string pass, UserDataVersion version, bool createPersistentCookie, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T:ISignedUser
+        public ISignedUser SignInUser<T>(string loginName, string pass, UserDataVersion version, bool createPersistentCookie, string HostClient = null, string HostReferrer = null, string AppName = null, bool? IsMobile = null) where T:SignedUser
         {
             try
             {
@@ -262,21 +262,37 @@ namespace Nistec.Web.Security
         //    SignIn(auth, createPersistentCookie);
         //}
 
-        public void SignIn(ISignedUser user, bool createPersistentCookie)
+        public void SignIn(SignedUser user, bool createPersistentCookie)
+        {
+            var userData = user.UserData(user.UserDataVersion);// Convert.ToString(user.UserId);
+            if (userData == null)
+                throw new SecurityException( AuthState.Failed,"Invalid userData!");
+            SignIn(user.UserName, userData, createPersistentCookie);
+            _signedInUser = user;
+        }
+        public void SignIn(SignedUserState user, bool createPersistentCookie)
+        {
+            if (user.UserData == null)
+                throw new SecurityException(AuthState.Failed, "Invalid userData!");
+            SignIn(user.UserName, user.UserData, createPersistentCookie);
+            //_signedInUser = user;
+        }
+
+        void SignIn(string UserName,string UserData, bool createPersistentCookie)
         {
             var now = DateTime.Now;// _clock.UtcNow.ToLocalTime();
             
             //user.IsMobile= DeviceHelper.IsMobile(this._httpContextAccess.Current());
 
-            var userData = user.UserData(user.UserDataVersion);// Convert.ToString(user.UserId);
+           // var userData = user.UserData(user.UserDataVersion);// Convert.ToString(user.UserId);
             
             var ticket = new FormsAuthenticationTicket(
                 1 /*version*/,
-                user.UserName,
+                UserName,
                 now,
                 now.Add(ExpirationTimeSpan),
                 createPersistentCookie,
-                userData,
+                UserData,
                 FormsAuthentication.FormsCookiePath);
 
             var encryptedTicket = FormsAuthentication.Encrypt(ticket);
@@ -316,9 +332,10 @@ namespace Nistec.Web.Security
             httpContext.Response.Cookies.Add(cookie);
             httpContext.Session.Remove(SignedUser.SessionKey);
             _isAuthenticated = true;
-            _signedInUser = user;
+            //_signedInUser = user;
         }
 
+        
         public void SignOut()
         {
             if (_httpContextAccess != null)
