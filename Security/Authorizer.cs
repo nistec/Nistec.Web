@@ -255,6 +255,7 @@ namespace Nistec.Web.Security
             {
                 case AuthState.PasswordShouldChange:
                 case AuthState.NonConfirmed:
+                case AuthState.ShouldOtp:
                 case AuthState.Succeeded:
                     user.HostClient = HostClient;
                     user.AppName = AppName;
