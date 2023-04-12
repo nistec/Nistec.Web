@@ -366,7 +366,7 @@ namespace Nistec.Web.Asp
 
         public string[] CacheArgs()
         {
-            return new string[] { KnowsArgs.UserId, LoginId.ToString(), KnowsArgs.StrArgs, UserName + ", " + AccountId.ToString() + ", " + AccountName + ", " + LastLoggedIn };
+            return new string[] { KnownArgs.UserId, LoginId.ToString(), KnownArgs.StrArgs, UserName + ", " + AccountId.ToString() + ", " + AccountName + ", " + LastLoggedIn };
         }
     }
 }

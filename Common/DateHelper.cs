@@ -81,7 +81,7 @@ namespace Nistec.Web
 
          public static DateTime ToDateTime(string date, DateTime defaultValue)
         {
-            return Types.ToDateTime(date, DateFormat,defaultValue);
+            return Types.ToDateTime(date, DateFormat , defaultValue);
         }
 
          public static DateTime EndOfDay(this DateTime date)
