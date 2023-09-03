@@ -54,6 +54,27 @@ namespace Nistec.Web.Security
     public class SignedUser : UserProfile, ISignedUser//, IUser
     {
         internal const string SessionKey = "SignedUser";
+
+        [EntityProperty]
+        public string Token { get; set; }
+        [EntityProperty]
+        public DateTime TokenExpirationDate { get; set; }
+        [EntityProperty]
+        public DateTime CreateDate { get; set; }
+
+        public bool IsExpired()
+        {
+            return TokenExpirationDate < DateTime.Now;
+        }
+        public bool IsValidMinutes(int validMinutes = 3)
+        {
+            return AccountId > 0 && UserId > 0 && TokenExpirationDate < DateTime.Now && TokenExpirationDate.Subtract(DateTime.Now).TotalMilliseconds >= validMinutes;
+        }
+        public bool IsValid()
+        {
+            return AccountId > 0 && UserId > 0 && TokenExpirationDate < DateTime.Now;
+        }
+
         public static SignedUser Get(HttpContextBase context, UserDataVersion version)
         {
             if (context == null || !context.Request.IsAuthenticated || !(context.User.Identity is FormsIdentity))
@@ -387,10 +408,27 @@ namespace Nistec.Web.Security
         #endregion
 
 
-
         #region User Data Json
 
-        public void SetUserDataJson(string AppName, string ClientIP)
+
+        public void RefreshToken()
+        {
+            if (IsValidMinutes())
+                return;
+            IDictionary<string, object> dic = null;
+            using (UserDataContext context = new UserDataContext())
+            {
+                dic = context.EntityDb.QueryDictionaryRecord("Token", Token, "App", AppName, "HostClient", HostClient);
+                //var result = context.EntityDb.QueryDictionary("AccountId", AccountId, "UserId", UserId, "App", AppName, "HostClient", HostClient);
+            }
+
+            Token = dic.Get<string>("Token");
+            TokenExpirationDate = dic.Get<DateTime>("TokenExpirationDate");
+            CreateDate = dic.Get<DateTime>("CreateDate");
+
+        }
+
+    public void SetUserDataJson(string AppName, string ClientIP)
         {
             DataJson = UserDataContext.GetUserDataJson(AccountId, UserId, AppName, ClientIP);
         }

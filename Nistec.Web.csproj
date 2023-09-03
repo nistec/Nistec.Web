@@ -91,7 +91,6 @@
     <Compile Include="Asp\DevicePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Cms\CmsCache.cs" />
     <Compile Include="Cms\CmsSite.cs" />
     <Compile Include="Cms\CmsPage.cs" />
     <Compile Include="Cms\CmsSiteTree.cs" />
@@ -120,29 +119,9 @@
     <Compile Include="Controls\DbContextCache.cs" />
     <Compile Include="Controls\HttpHelper.cs" />
     <Compile Include="Controls\Lookups.cs" />
-    <Compile Include="Controls\ServerCache.cs" />
     <Compile Include="Controls\TraceHelper.cs" />
     <Compile Include="Controls\WebCache.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Asp\Sc\Enums.cs" />
-    <Compile Include="Asp\Sc\ISessionControl.cs" />
-    <Compile Include="Asp\Sc\LoginControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asp\Sc\MasterPageView.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asp\Sc\PageExtenesion.cs" />
-    <Compile Include="Asp\Sc\ScPath.cs" />
-    <Compile Include="Asp\Sc\SecurityUtil.cs" />
-    <Compile Include="Asp\Sc\SessionContext.cs" />
-    <Compile Include="Asp\Sc\SessionControl.cs" />
-    <Compile Include="Asp\Sc\SessionException.cs" />
-    <Compile Include="Asp\Sc\Sessions.cs" />
-    <Compile Include="Asp\Sc\SessionUserControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Asp\Sc\UserAuth.cs" />
     <Compile Include="Security\AlwaysAccessibleAttribute.cs" />
     <Compile Include="Security\Authorizer.cs" />
     <Compile Include="Security\CookieHandler.cs" />

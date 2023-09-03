@@ -11,7 +11,7 @@ using Nistec;
 //using Nistec.Caching.Remote;
 using Nistec.Runtime;
 using Nistec.Generic;
-using Nistec.Channels.RemoteCache;
+//using Nistec.Channels.RemoteCache;
 
 namespace Nistec.Web.Asp
 {

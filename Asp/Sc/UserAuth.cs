@@ -8,7 +8,7 @@ using Nistec.Runtime;
 using Nistec.Data.Entities;
 using Nistec.Data;
 using Nistec.Generic;
-using Nistec.Channels.RemoteCache;
+//using Nistec.Channels.RemoteCache;
 
 
 namespace Nistec.Web.Asp

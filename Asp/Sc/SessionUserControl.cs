@@ -8,7 +8,7 @@ using System.Web.UI.HtmlControls;
 
 using Nistec;
 using Nistec.Runtime;
-using Nistec.Channels.RemoteCache;
+//using Nistec.Channels.RemoteCache;
 using Nistec.Channels;
 //using Nistec.Caching.Remote;
 

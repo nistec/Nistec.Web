@@ -106,7 +106,7 @@ namespace Nistec.Web.Security
                 return context.EntityDb.QueryJsonRecord("AccountId", AccountId, "UserId", UserId, "AppName", AppName, "ClientIP", ClientIP, "OtpId", OtpId, "OtpCode", OtpCode);
             }
         }
-
+        
         //public static string GetUserData1(int AccountId,int UserId)
         //{
         //    GenericRecord userdata = null;
@@ -145,7 +145,6 @@ namespace Nistec.Web.Security
     {
         [EntityProperty]
         public string DisplayName { get; set; }
-
         [EntityProperty(EntityPropertyType.Identity)]
         public int UserId { get; set; }
         [EntityProperty]
@@ -170,8 +169,8 @@ namespace Nistec.Web.Security
         public DateTime Creation { get; set; }
         [EntityProperty]
         public DateTime Modified { get; set; }
-        [EntityProperty]
-        public string Profession { get; set; }
+        //[EntityProperty]
+        //public string Token { get; set; }//Profession
         [EntityProperty]
         public int AccessId { get; set; }
         //[EntityProperty]
@@ -449,6 +448,13 @@ namespace Nistec.Web.Security
         string AccountName { get; set; }
         [EntityProperty(EntityPropertyType.View)]
         int AccType { get; set; }
+
+        [EntityProperty]
+        string Token { get; set; }
+        [EntityProperty]
+        DateTime TokenExpirationDate { get; set; }
+
+
         //[EntityProperty(EntityPropertyType.View)]
         //string AccAccess { get; set; }
         //[EntityProperty(EntityPropertyType.View)]

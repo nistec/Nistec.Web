@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nistec.Channels.RemoteCache;
+//using Nistec.Channels.RemoteCache;
 using Nistec.Data.Entities.Config;
 
 namespace Nistec.Web.Controls
