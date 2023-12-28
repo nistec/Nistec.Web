@@ -22,7 +22,7 @@ namespace Nistec.Web.Security
         //Managements users
         System=6,   //sub excet: no credit, no user creation
         SuperSystem = 7, //admin except: limited credit, limited user creation
-        ViceAdmin = 8, //admin except: limited user creation
+        Director = 8, //admin except: limited user creation
         Admin = 9 // can do anything
     }
 

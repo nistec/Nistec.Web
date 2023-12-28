@@ -25,8 +25,57 @@ namespace Nistec.Web.Security
         Blocked = 2
     }
 
+    /*
+     AuthState	-109	Action not allowed	0
+AuthState	-108	PasswordManyFailures	0
+AuthState	-107	PasswordShouldChange	0
+AuthState	-106	User was not removed ??	0
+AuthState	-105	User not allowed	0
+AuthState	-104	Non Confirmed	0
+AuthState	-103	User or Account is blocked	0
+AuthState	-102	Evaluation expired	0
+AuthState	-101	Ip not alowed	0
+AuthState	-100	Un Authorized	0
+AuthState	-1	Error	0
+AuthState	0	Un Authorized	0
+AuthState	1	Ip not alowed	0
+AuthState	2	Evaluation expired	0
+AuthState	3	User or Account is blocked	0
+AuthState	4	Non Confirmed	0
+AuthState	5	User not allowed	0
+AuthState	6	User was not removed ??	0
+AuthState	7	PasswordShouldChange	0
+AuthState	8	PasswordManyFailures	0
+AuthState	9	Action not allowed	0
+AuthState	10	ok	0
+AuthState	200	ok	0
+     */
+
+    public enum AuthState_NEW
+    {
+        Failed = -1,
+        UnAuthorized = -100, //--0=auth faild
+        IpNotAlowed = -101,//--1=ip not alowed
+        EvaluationExpired = -102,//--2=Evaluation expired
+        Blocked = -103,//--3=account blocked
+        NonConfirmed = -104,//--4=non confirmed, username or password exists
+        //UserRemoved = 5,//user removed
+        //UserNotRemoved = 6,//user not removed
+        //ShouldOtp = 5,
+        UserNotAllowed = -105,
+        UserNotExists = -106,
+        PasswordShouldChange = -107,//UserUpdated = 7,//not used
+        PasswordManyFailures = -108,// UserNotUpdated = 8,//not used
+        ActionNotAllowed = -109,//Action not allowed
+        Succeeded = 200//--10=ok
+
+    }
+
     public enum AuthState
     {
+        ShouldOtp = -102,
+        UserNotAllowed = -106,
+        UserNotExists=-105,
         Failed = -1,
         UnAuthorized = 0, //--0=auth faild
         IpNotAlowed = 1,//--1=ip not alowed
@@ -35,7 +84,6 @@ namespace Nistec.Web.Security
         NonConfirmed = 4,//--4=non confirmed, username or password exists
         //UserRemoved = 5,//user removed
         //UserNotRemoved = 6,//user not removed
-        ShouldOtp = 5,
         PasswordShouldChange = 7,//UserUpdated = 7,//not used
         PasswordManyFailures = 8,// UserNotUpdated = 8,//not used
         ActionNotAllowed = 9,//Action not allowed
@@ -45,14 +93,17 @@ namespace Nistec.Web.Security
 
     public enum UserUpdateState
     {
+        ShouldOtp = -102,
+        UserNotAllowed = -106,
+        UserNotExists = -105,
         Failed = -1,
         UnAuthorized = 0, //--0=auth faild
         IpNotAlowed = 1,//--1=ip not alowed
         EvaluationExpired = 2,//--2=Evaluation expired
         Blocked = 3,//--3=account blocked
         NonConfirmed = 4,//--4=non confirmed, username or password exists
-        UserRemoved = 5,//user removed
-        UserNotRemoved = 6,//user not removed
+        //UserNotAllowed = 5,//user removed
+        //UserNotExists = 6,//user not removed
         UserUpdated = 7,//not used
         UserNotUpdated = 8,//not used
         Succeeded = 10//--10=ok

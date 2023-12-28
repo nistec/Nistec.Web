@@ -75,7 +75,7 @@ namespace Nistec.Web.Security
             catch (Exception ex)
             {
                 if (ex.Message.ToLower().Contains("duplicate"))
-                    return UserResult.Get(AuthState.NonConfirmed);
+                    return UserResult.Get(AuthState.Failed);
                 return UserResult.IsUpdated(-1);
             }
         }
@@ -92,7 +92,7 @@ namespace Nistec.Web.Security
             catch (Exception ex)
             {
                 if (ex.Message.ToLower().Contains("duplicate"))
-                    return UserResult.Get(AuthState.NonConfirmed);
+                    return UserResult.Get(AuthState.Failed);
                 return UserResult.IsUpdated(-1);
             }
         }

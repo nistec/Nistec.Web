@@ -147,7 +147,7 @@ namespace Nistec.Web.Security
             var res = member.Insert();
             if (res.Status <= 0)
             {
-                throw new SecurityException(AuthState.NonConfirmed, message.GetErrorMessage("Internal error, could not create password"));
+                throw new SecurityException(AuthState.Failed, message.GetErrorMessage("Internal error, could not create password"));
             }
 
             string notifyMessage = "";

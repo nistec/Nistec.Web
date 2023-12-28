@@ -228,10 +228,10 @@ namespace Nistec.Web.Security
                     desc = "User is blocked"; break;
                 case AuthState.NonConfirmed:// = 4,//--4=non confirmed, username or password exists
                     desc = "Non confirmed, UserName allready exists"; break;
-                //case AuthState.UserRemoved:// = 5,//user removed
-                //    desc = "User removed"; break;
-                //case AuthState.UserNotRemoved:// = 6,//user not removed
-                //    desc = "User not removed"; break;
+                case AuthState.UserNotAllowed:// = 5,//user removed
+                    desc = "User not allowed"; break;
+                case AuthState.UserNotExists:// = 6,//user not removed
+                    desc = "User not exists"; break;
                 case AuthState.PasswordShouldChange:// = 7,//user updated
                     desc = "Password Should Change"; break;
                 case AuthState.PasswordManyFailures:// = 8,//user updated
@@ -259,10 +259,10 @@ namespace Nistec.Web.Security
                     desc = "User is blocked"; break;
                 case UserUpdateState.NonConfirmed:// = 4,//--4=non confirmed, username or password exists
                     desc = "Non confirmed, UserName allready exists"; break;
-                case UserUpdateState.UserRemoved:// = 5,//user removed
-                    desc = "User removed"; break;
-                case UserUpdateState.UserNotRemoved:// = 6,//user not removed
-                    desc = "User not removed"; break;
+                case UserUpdateState.UserNotAllowed:// = 5,//user removed
+                    desc = "User np allowed"; break;
+                case UserUpdateState.UserNotExists:// = 6,//user not removed
+                    desc = "User not exists"; break;
                 case UserUpdateState.UserUpdated:// = 7,//user updated
                     desc = "User Updated"; break;
                 case UserUpdateState.UserNotUpdated:// = 8,//user updated
@@ -277,10 +277,10 @@ namespace Nistec.Web.Security
         {
             if (result == -1)
                 return Get(UserUpdateState.Failed);
-            if (result == 1)
-                return Get(UserUpdateState.UserRemoved);
+            if (result == 10)
+                return Get(UserUpdateState.Succeeded);//.UserRemoved);
             else
-                return Get(UserUpdateState.UserNotRemoved);
+                return Get(UserUpdateState.Failed);//.UserNotRemoved);
         }
 
         public static UserResult IsUpdated(int result)
