@@ -251,14 +251,15 @@ namespace Nistec.Web.Security
 
         //}
 
-        public static int SendResetToken(string email, int AppId)
+        public static int SendResetToken(string email, bool smsPlatform, int AppId)
         {
             string Token = Guid.NewGuid().ToString().Replace("-", "");
+            int platform = smsPlatform ? 1 : 2;
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserSendResetToken", -1, "Email", email, "Token", Token, "AppId", AppId);
+                return db.ExecuteReturnValue("sp_Ad_UserSendResetToken", -1, "Email", email, "Token", Token, "AppId", AppId, "Platform", smsPlatform);
             }
 
         }

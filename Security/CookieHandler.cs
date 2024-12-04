@@ -14,17 +14,18 @@ namespace Nistec.Web.Security
 
             if (string.IsNullOrEmpty(value))
                 return value;
-            return MachineKey.Encode(Encoding.UTF8.GetBytes(value), MachineKeyProtection.All);
+            //return MachineKey.Encode(Encoding.UTF8.GetBytes(value), MachineKeyProtection.All);
             //return Convert.ToBase64String(MachineKey.Protect(Encoding.UTF8.GetBytes(value)));
-
+            return Convert.ToBase64String(Encoding.UTF8.GetBytes(value));
         }
 
         public static string Decode(string value)
         {
             if (string.IsNullOrEmpty(value))
                 return value;
-            return Encoding.UTF8.GetString(MachineKey.Decode(value, MachineKeyProtection.All));
+            //return Encoding.UTF8.GetString(MachineKey.Decode(value, MachineKeyProtection.All));
             //return Encoding.UTF8.GetString(MachineKey.Unprotect(Convert.FromBase64String(value)));
+            return Encoding.UTF8.GetString(Convert.FromBase64String(value));
         }
 
         //some action method
