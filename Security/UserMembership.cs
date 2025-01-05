@@ -107,6 +107,7 @@ namespace Nistec.Web.Security
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return UserResult.IsUpdated(-1);
             }
         }

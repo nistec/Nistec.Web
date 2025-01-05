@@ -190,7 +190,7 @@ namespace Nistec.Web.Security
 
         public static PasswordScore CheckStrength(string password)
         {
-            int score = 0;
+            //int score = 0;
 
             string strongRegex = @"^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})";
             string mediumRegex = @"^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{6,})";

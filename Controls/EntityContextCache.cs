@@ -56,7 +56,7 @@ namespace Nistec.Web.Controls
             //no cache
         }
        
-        public IList<T> ExecList(params object[] keyValueParameters)
+        public override IList<T> ExecList(params object[] keyValueParameters)
         {
             return DbContextCache.ExecuteList<Dbc, T>(CacheKey, keyValueParameters);
         }

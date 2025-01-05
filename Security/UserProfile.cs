@@ -121,7 +121,7 @@ namespace Nistec.Web.Security
     }
     public class UserProfileView : UserItem
     {
-        public new const string MappingName = "vw_Ad_UserProfile";
+        public const string MappingName = "vw_Ad_UserProfile";
 
         [EntityProperty]
         public string RoleName { get; set; }
