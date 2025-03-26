@@ -51,29 +51,50 @@ AuthState	10	ok	0
 AuthState	200	ok	0
      */
 
-    public enum AuthState_NEW
+    //public enum AuthState_NEW1
+    //{
+    //    Failed = -1,
+    //    UnAuthorized = -100, //--0=auth faild
+    //    IpNotAlowed = -101,//--1=ip not alowed
+    //    EvaluationExpired = -102,//--2=Evaluation expired
+    //    Blocked = -103,//--3=account blocked
+    //    NonConfirmed = -104,//--4=non confirmed, username or password exists
+    //    //UserRemoved = 5,//user removed
+    //    //UserNotRemoved = 6,//user not removed
+    //    //ShouldOtp = 5,
+    //    UserNotAllowed = -105,
+    //    UserNotExists = -106,
+    //    PasswordShouldChange = -107,//UserUpdated = 7,//not used
+    //    PasswordManyFailures = -108,// UserNotUpdated = 8,//not used
+    //    ActionNotAllowed = -109,//Action not allowed
+    //    ShouldOtp=100,
+    //    Succeeded = 200//--10=ok
+
+    //}
+
+    public enum AuthState_NEW2
     {
         Failed = -1,
-        UnAuthorized = -100, //--0=auth faild
-        IpNotAlowed = -101,//--1=ip not alowed
-        EvaluationExpired = -102,//--2=Evaluation expired
-        Blocked = -103,//--3=account blocked
-        NonConfirmed = -104,//--4=non confirmed, username or password exists
+        UnAuthorized = -401, //--0=auth faild
+        IpNotAlowed = -416,//--1=ip not alowed
+        EvaluationExpired = -426,//--2=Evaluation expired
+        Blocked = -403,//--3=account blocked
+        NonConfirmed = -428,//--4=non confirmed, username or password exists
         //UserRemoved = 5,//user removed
         //UserNotRemoved = 6,//user not removed
         //ShouldOtp = 5,
-        UserNotAllowed = -105,
-        UserNotExists = -106,
-        PasswordShouldChange = -107,//UserUpdated = 7,//not used
-        PasswordManyFailures = -108,// UserNotUpdated = 8,//not used
-        ActionNotAllowed = -109,//Action not allowed
+        UserNotAllowed = -451,
+        UserNotExists = -404,
+        PasswordShouldChange = -407,//UserUpdated = 7,//not used
+        PasswordManyFailures = -429,// UserNotUpdated = 8,//not used
+        ActionNotAllowed = -405,//Action not allowed
+        ShouldOtp = 100,
         Succeeded = 200//--10=ok
-
     }
 
     public enum AuthState
     {
-        ShouldOtp = -102,
+        //ShouldOtp = -102,
         UserNotAllowed = -106,
         UserNotExists=-105,
         Failed = -1,
@@ -82,6 +103,7 @@ AuthState	200	ok	0
         EvaluationExpired = 2,//--2=Evaluation expired
         Blocked = 3,//--3=account blocked
         NonConfirmed = 4,//--4=non confirmed, username or password exists
+        ShouldOtp = 5,
         //UserRemoved = 5,//user removed
         //UserNotRemoved = 6,//user not removed
         PasswordShouldChange = 7,//UserUpdated = 7,//not used

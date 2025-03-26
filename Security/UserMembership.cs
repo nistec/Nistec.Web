@@ -281,6 +281,7 @@ namespace Nistec.Web.Security
                 return db.ExecuteReturnValue("sp_Ad_UserResetPass", -1,"Email", email, "AccountId", accountId, "Password", newpassword, "ConfirmationToken", resetToken);
             }
         }
+
         public static int ResetNewPassword(int accountId, string email, string newpassword, string resetToken)
         {
             //UserProfile user = UserProfile.GetByEmail(email);
@@ -296,7 +297,7 @@ namespace Nistec.Web.Security
                 return db.ExecuteReturnValue("sp_Ad_UserResetNewPass", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken);
             }
         }
-        public static int ResetPassword(int AccountId, int UserId, int AssignBy, int AppId)
+        public static int ResetPassword(int AccountId, int UserId, int AssignBy, int AppId, int Platform)
         {
             using (Authorizer context = Authorizer.Instance)
             {
