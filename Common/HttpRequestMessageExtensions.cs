@@ -208,6 +208,194 @@ namespace System.Web.Http
         #endregion
 
         #region http request methods
+
+        public class HttpResponse
+        {
+            public HttpStatusCode Status { get; set; }
+            public string Response { get; set; }
+        }
+
+        public class SmsMessage
+        {
+            public string Message { get; set; }
+            public string Sender { get; set; }
+            public string[] Targets { get; set; }
+        }
+
+        public static void PostJsonDemo(string message,string sender ,string target)
+        {
+            try
+            {
+
+                //object o=new object("Message"="", "Sender":"0527464292",)
+
+                StringBuilder sb = new StringBuilder();
+                sb.Append("{");
+                sb.Append("\"Message\":");
+                sb.Append("\""+ message +"\"");
+                sb.Append("\"Sender\":");
+                sb.Append("\"" + sender + "\"");
+                sb.Append("\"Targets\":[");
+                //begin loop
+                sb.Append("{");
+                sb.Append("\"To\":");
+                sb.Append("\"" + target + "\"");
+                sb.Append("}");
+                //end loop
+                sb.Append("]}");
+
+                PostJson("https://sync.my-t.co.il/api/sms/SendSMS", sb.ToString(), CreateBasicAuthToken("user name", "password"), 5000, (status, response) =>
+                {
+                    if(status!= HttpStatusCode.OK)
+                    {
+                        //Do somthing;
+                    }
+                    else
+                    {
+                        //Do somthing;
+                    }
+
+                });
+            }
+            catch (OperationCanceledException ocex)
+            {
+                //log: "Send messsage canceled: " + ocex.Message.ToString());
+            }
+            catch (Exception ex)
+            {
+                //log "Send messsage error: " + ex.ToString());
+            }
+        }
+
+        public static void PostJson(string address, string data, string authToken, int connectTimeout, Action<HttpStatusCode, string> action)
+        {
+            try
+            {
+                //string authToken = CreateBasicAuthToken(userName, password);
+                using (var cancellationTokenSource = new CancellationTokenSource())
+                {
+                    cancellationTokenSource.CancelAfter(connectTimeout);
+                    if (SynchronizationContext.Current == null && TaskScheduler.Current == TaskScheduler.Default)
+                        DoJsonPostRequest(address, data, authToken, cancellationTokenSource.Token, action).GetAwaiter().GetResult();
+                    else
+                       Task.Run(() => DoJsonPostRequest(address, data, authToken, cancellationTokenSource.Token, action)).GetAwaiter().GetResult();
+                }
+            }
+            catch (OperationCanceledException ocex)
+            {
+                action(HttpStatusCode.RequestTimeout,"Send messsage canceled: " + ocex.Message.ToString());
+            }
+            catch (Exception ex)
+            {
+                action(HttpStatusCode.ExpectationFailed, "Send messsage error: " + ex.ToString());
+            }
+        }
+
+        //Calling an async method from a asynchronous method where await is an option.
+        public static async Task PostJsonAsync(string address, string data, string authToken, int connectTimeout, Action<HttpStatusCode, string> action)
+        {
+            try
+            {
+                using (var cancellationTokenSource = new CancellationTokenSource())
+                {
+                    cancellationTokenSource.CancelAfter(connectTimeout);
+                    await  DoJsonPostRequest(address, data, authToken, cancellationTokenSource.Token, action);
+                }
+            }
+            catch (OperationCanceledException ocex)
+            {
+                action(HttpStatusCode.RequestTimeout, "Send messsage canceled: " + ocex.Message.ToString());
+            }
+            catch (Exception ex)
+            {
+                action(HttpStatusCode.ExpectationFailed, "Send messsage error: " + ex.ToString());
+            }
+        }
+
+        //Calling an async method from a synchronous method where await is not an option.
+        public static string PostJson(string address, string data, string userName, string password, int connectTimeout = 5000)
+        {
+            string response = null;
+            try
+            {
+                string authToken = CreateBasicAuthToken(userName, password);
+                using (var cancellationTokenSource = new CancellationTokenSource())
+                {
+                    cancellationTokenSource.CancelAfter(connectTimeout);
+                    if (SynchronizationContext.Current == null && TaskScheduler.Current == TaskScheduler.Default)
+                        response = DoJsonPostRequest(address, data, authToken, cancellationTokenSource.Token).GetAwaiter().GetResult();
+                    else
+                        response = Task.Run(() => DoJsonPostRequest(address, data, authToken, cancellationTokenSource.Token)).GetAwaiter().GetResult();
+
+                    return response;
+                }
+            }
+            catch (OperationCanceledException ocex)
+            {
+                return "Send messsage canceled: " + ocex.Message.ToString();
+            }
+            catch (AggregateException ex)
+            {
+                return "Send messsage error: " + ex.ToString();
+            }
+            catch (Exception ex)
+            {
+                return "Send messsage error: " + ex.ToString();
+            }
+        }
+
+        static string CreateBasicAuthToken(string userName, string password)
+        {
+            string cred = userName + ":" + password;
+            return "Basic " + Convert.ToBase64String(Encoding.UTF8.GetBytes(cred));
+        }
+        
+
+        static async Task DoJsonPostRequest(string address, string data, string authToken, CancellationToken ctsTocken, Action<HttpStatusCode, string> result)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
+                using (var request = new HttpRequestMessage(HttpMethod.Post, address))
+                using (request.Content = new StringContent(data, Encoding.UTF8, "application/json"))
+                using (var response = await httpClient.SendAsync(request, ctsTocken))
+                {
+                    if (!response.IsSuccessStatusCode)
+                        result(response.StatusCode, response.ReasonPhrase);
+                    else
+                        result(response.StatusCode, await response.Content.ReadAsStringAsync());
+                }
+            }
+        }
+
+        static async Task<string> DoJsonPostRequest(string address, string data, string authToken, CancellationToken ctsTocken)
+        {
+            using (HttpClient httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
+                using (var request = new HttpRequestMessage(HttpMethod.Post, address))
+                using (request.Content = new StringContent(data, Encoding.UTF8, "application/json"))
+                using (var response = await httpClient.SendAsync(request, ctsTocken))
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+            }
+        }
+
+        static async Task<string> DoJsonPostRequest(string address, string data, string authToken, int connectTimeout = 5000)
+        {
+            using (HttpClient httpClient = new HttpClient() { Timeout = TimeSpan.FromMilliseconds(connectTimeout) })
+            {
+                httpClient.DefaultRequestHeaders.Add("Authorization", authToken);
+                using (var request = new HttpRequestMessage(HttpMethod.Post, address))
+                using (request.Content = new StringContent(data, Encoding.UTF8, "application/json"))
+                using (var response = await httpClient.SendAsync(request))
+                {
+                    return await response.Content.ReadAsStringAsync();
+                }
+            }
+        }
+
         static Task<string> DoHttpRequest(string address, HttpMethod method, string contentType, string data)
         {
             using (var httpClient = new HttpClient() { Timeout = TimeSpan.FromSeconds(TimeoutSeconds) })
