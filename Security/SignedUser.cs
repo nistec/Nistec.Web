@@ -33,16 +33,73 @@ namespace Nistec.Web.Security
         public int AccessId { get; set; }
         public int UserId { get; set; }
         public AuthState State { get; set; }
+        //public AuthFlags Flags { get {return (AuthFlags)StateFlags} }
+        public AuthFlags StateFlags { get; set; }
         public string Token { get; set; }
         public string Phone { get; set; }
         public string UserName { get; set; }
         public string UserData { get; set; }
+        public string AppName { get; set; }
         //public int OtpId { get; set; }
         //public string OtpCode { get; set; }
 
-        public static SignedUserState Parse(string data)
+        public static SignedUserState Parse(string json)
         {
-            return JsonSerializer.Deserialize<SignedUserState>(data);
+            //JsonSerializer.Deserialize<SignedUserState>(data, (o)=> {
+             IJsonSerializer serializer = new JsonSerializer(JsonSerializerMode.Read, new JsonSettings() { IgnoreCaseOnDeserialize = false });
+             var JsonReader = serializer.Read<Dictionary<string, object>>(json);
+                if (JsonReader == null)
+                {
+                    return null;
+                }
+                return new SignedUserState()
+                {
+                    AccessId = JsonReader.Get<int>("AccessId"),
+                    AppName = JsonReader.Get<string>("AppName"),
+                    Phone = JsonReader.Get<string>("AppName"),
+                    State = (AuthState)JsonReader.Get<byte>("State"),
+                    StateFlags = (AuthFlags)JsonReader.Get<byte>("StateFlags"),
+                    Token = JsonReader.Get<string>("Token"),
+                    UserData = JsonReader.Get<string>("UserData"),
+                    UserId = JsonReader.Get<int>("UserId"),
+                    UserName = JsonReader.Get<string>("UserName")
+                };
+            //return JsonSerializer.Deserialize<SignedUserState>(json);
+        }
+
+        public static AuthFlags Substract(AuthFlags StateFlags, AuthFlags flgToRemove)
+        {
+            if ((int)StateFlags > (int)flgToRemove)
+                StateFlags = (AuthFlags)((int)StateFlags - (int)flgToRemove);
+            return StateFlags;
+        }
+
+        public void Substract(AuthFlags flgToRemove)
+        {
+            if ((int)StateFlags > (int)flgToRemove)
+                StateFlags = (StateFlags - (int)flgToRemove);
+        }
+
+        //None=0,
+        //IsSucceeded = 10,
+        //ShouldChangePassword = 20,
+        //ShouldOtp=40,
+        //ShouldConfirmed = 80,
+        public bool ShouldChangePassword
+        {
+            get { return StateFlags.HasFlag(AuthFlags.ShouldChangePassword); }
+        }
+        public bool ShouldOtp
+        {
+            get { return StateFlags.HasFlag(AuthFlags.ShouldOtp); }
+        }
+        public bool ShouldConfirmed
+        {
+            get { return StateFlags.HasFlag(AuthFlags.ShouldConfirmed); }
+        }
+        public bool IsSucceeded
+        {
+            get { return StateFlags.HasFlag(AuthFlags.IsSucceeded); }
         }
         public string ToJson()
         {
@@ -61,6 +118,8 @@ namespace Nistec.Web.Security
         public DateTime TokenExpirationDate { get; set; }
         [EntityProperty]
         public DateTime CreateDate { get; set; }
+        [EntityProperty]
+        public int StateFlags { get; set; }
 
         public bool IsExpired()
         {

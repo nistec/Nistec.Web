@@ -55,14 +55,14 @@ namespace System.Web.Http
 
         public static IDictionary<string, object> ParseRequest(this HttpRequestMessage request)
         {
-            string jsonRequest = request.Content.ReadAsStringAsync().Result;
+            string jsonRequest = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             //Netlog.InfoFormat("{0} request:{1}", action, jsonRequest);
             //TraceHelper.Log("co", "NetcellOtp", action, jsonRequest, LogType.Info);
             return Nistec.Serialization.JsonSerializer.ToDictionary(jsonRequest);
         }
         public static T ParseRequest<T>(this HttpRequestMessage request)
         {
-            string jsonRequest = request.Content.ReadAsStringAsync().Result;
+            string jsonRequest = request.Content.ReadAsStringAsync().GetAwaiter().GetResult();
             //Netlog.InfoFormat("{0} request:{1}", action, jsonRequest);
             //TraceHelper.Log("co", "NetcellOtp", action, jsonRequest, LogType.Info);
             return Nistec.Serialization.JsonSerializer.Deserialize<T>(jsonRequest);

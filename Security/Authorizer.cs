@@ -98,7 +98,7 @@ namespace Nistec.Web.Security
                 SignedUser res = null;
                 using (Authorizer context = new Authorizer())
                 {
-                    res = context.EntityDb.DoCommand<SignedUser>("sp_Ad_UserRegister",
+                    res = context.EntityDb.DoCommand<SignedUser>("spAd_UserRegister",
                     DataParameter.GetSql("DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password, "SendResetToken", SendResetToken, "PasswordShouldChange", u.PasswordShouldChange, "PasswordExpirationDate", u.PasswordExpirationDate), CommandType.StoredProcedure);
                 }
                 return UserResult.Get((MembershipStatus)res.State); //new UserResult() { Status = res.State };
@@ -126,7 +126,7 @@ namespace Nistec.Web.Security
 
             using (Authorizer context = new Authorizer())
             {
-                return context.EntityDb.Context().ExecuteReturnValue("sp_Ad_UserRegister",-1,
+                return context.EntityDb.Context().ExecuteReturnValue("spAd_UserRegister",-1,
                 "DisplayName", u.DisplayName, "Email", u.Email, "Phone", u.Phone, "UserName", u.UserName, "UserRole", u.UserRole, "AccountId", u.AccountId, "Lang", u.Lang, "Evaluation", u.Evaluation, "IsBlocked", u.IsBlocked, "Password", Password, "SendResetToken", SendResetToken, "PasswordShouldChange", PasswordShouldChange, "PasswordExpirationDate", PasswordExpirationDate, CommandType.StoredProcedure);
             }
         }
@@ -366,7 +366,7 @@ namespace Nistec.Web.Security
         }
         public static bool IsValidPassword(string expression)
         {
-            Regex regex = new Regex(@"^[a-zA-Z0-9\.\-_!#@]+$");
+            Regex regex = new Regex(@"^[a-zA-Z0-9\.\-_!^$#@]+$");
 
             if (!regex.Match(expression).Success)
             {

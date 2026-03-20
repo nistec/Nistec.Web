@@ -252,7 +252,7 @@ namespace Nistec.Web.Security
 
         //}
 
-        public static int SendResetToken(string email, bool smsPlatform, int AppId)
+        public static int SendResetToken(string email, bool smsPlatform, int AppId, string AppUrl)
         {
             string Token = Guid.NewGuid().ToString().Replace("-", "");
             int platform = smsPlatform ? 1 : 2;
@@ -260,50 +260,62 @@ namespace Nistec.Web.Security
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserSendResetToken", -1, "Email", email, "Token", Token, "AppId", AppId, "Platform", smsPlatform);
+                return db.ExecuteReturnValue("spAd_UserResetSendToken", -1, "Email", email, "Token", Token, "AppId", AppId, "Platform", smsPlatform, "AppUrl", AppUrl);
             }
 
         }
 
-        [Obsolete("use ResetNewPassword instead")]
-        public static int ResetPassword(int accountId, string email, string newpassword, string resetToken)
-        {
-            //UserProfile user = UserProfile.GetByEmail(email);
-            //if (user == null)
-            //{
-            //    throw new SecurityException((int)MembershipStatus.EmailNotExists, "The email provided is invalid. Please check the value and try again.");
-            //}
+        //[Obsolete("use ResetNewPassword instead")]
+        //public static int ResetPassword(int accountId, string email, string newpassword, string resetToken)
+        //{
+        //    //UserProfile user = UserProfile.GetByEmail(email);
+        //    //if (user == null)
+        //    //{
+        //    //    throw new SecurityException((int)MembershipStatus.EmailNotExists, "The email provided is invalid. Please check the value and try again.");
+        //    //}
 
+        //    using (Authorizer context = Authorizer.Instance)
+        //    {
+        //        var db = context.EntityDb.Context();
+
+        //        return db.ExecuteReturnValue("sp_Ad_UserResetPass", -1,"Email", email, "AccountId", accountId, "Password", newpassword, "ConfirmationToken", resetToken);
+        //    }
+        //}
+        public static int ResetNewPassword(int accountId, string email, string newpassword, string resetToken, int currentUser)
+        {
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserResetPass", -1,"Email", email, "AccountId", accountId, "Password", newpassword, "ConfirmationToken", resetToken);
+                return db.ExecuteReturnValue("spAd_UserResetPassword", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken, "CurrentOp", currentUser);
             }
         }
-
         public static int ResetNewPassword(int accountId, string email, string newpassword, string resetToken)
         {
-            //UserProfile user = UserProfile.GetByEmail(email);
-            //if (user == null)
-            //{
-            //    throw new SecurityException((int)MembershipStatus.EmailNotExists, "The email provided is invalid. Please check the value and try again.");
-            //}
-
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserResetNewPass", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken);
+                return db.ExecuteReturnValue("spAd_UserResetPassword", -1, "Email", email, "AccountId", accountId, "Password", newpassword, "ResetToken", resetToken);
             }
         }
-        public static int ResetPassword(int AccountId, int UserId, int AssignBy, int AppId, int Platform)
+        //[Obsolete("use UserResetAssign insted")]
+        //public static int ResetPassword(int AccountId, int UserId, int AssignBy, int AppId, int Platform)
+        //{
+        //    using (Authorizer context = Authorizer.Instance)
+        //    {
+        //        var db = context.EntityDb.Context();
+        //        return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "AccountId", AccountId,"UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
+        //    }
+        //}
+        public static int UserResetAssign(int AccountId, int UserId, int AssignBy, int AppId, int Platform)
         {
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "AccountId", AccountId,"UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
+                return db.ExecuteReturnValue("spAd_UserResetAssign", -1, "AccountId", AccountId, "UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
+                //return db.ExecuteReturnValue("sp_Ad_UserResetPassword", -1, "AccountId", AccountId,"UserId", UserId, "AssignBy", AssignBy, "AppId", AppId);
             }
         }
 
@@ -313,7 +325,7 @@ namespace Nistec.Web.Security
             {
                 var db = context.EntityDb.Context();
 
-                return db.ExecuteSingle<UserProfile>("sp_Ad_UserVerificationToken", "Token", token);
+                return db.ExecuteSingle<UserProfile>("spAd_UserVerificationToken", "Token", token);
             }
 
         }
@@ -323,7 +335,7 @@ namespace Nistec.Web.Security
             using (Authorizer context = Authorizer.Instance)
             {
                 var db = context.EntityDb.Context();
-                return db.ExecuteScalar<string>("sp_Ad_User_Token_Get",null, "UserId", UserId, "TokenType", (int)TokenType);
+                return db.ExecuteScalar<string>("spAd_User_Token_Get",null, "UserId", UserId, "TokenType", (int)TokenType);
             }
         }
 

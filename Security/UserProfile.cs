@@ -177,7 +177,6 @@ namespace Nistec.Web.Security
         //public int ParentId { get; set; }
         [EntityProperty]
         public bool IsVirtual { get; set; }
-
     }
 
     public class UserProfile : UserItem, IUserProfile
@@ -437,6 +436,7 @@ namespace Nistec.Web.Security
         string HostClient { get; set; }
         string AppName { get; set; }
         int State { get; set; }
+        int StateFlags { get; set; }
         bool IsAuthenticated { get; }
         [EntityProperty]
         bool IsAdmin { get; }
